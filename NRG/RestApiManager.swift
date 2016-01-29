@@ -42,7 +42,7 @@ class RestApiManager : NSObject {
         })
     }
     
-    //gets all houses linked to that owner
+    //gets all rooms linked to that owner
     func getRooms(let owner: String, let house: String, onCompletion: (JSON) -> Void) {
         
         let houseLink = link+"room/?&owner="+owner+"&house="+house
@@ -53,7 +53,6 @@ class RestApiManager : NSObject {
             
         })
     }
-    
     
     //makes the HTTPRequest
     func makeHTTPGetRequest(path: String, onCompletion: ServiceResponse)

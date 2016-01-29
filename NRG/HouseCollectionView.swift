@@ -96,7 +96,18 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             dest.houses = self.houseNames
         }
         
+        if(segue.identifier == "toHouse")
+        {
+            var dest = self.collectionView!.indexPathsForSelectedItems()!
+            
+            let indexPath = dest[0] as NSIndexPath
         
+            let roomView = segue.destinationViewController as! HouseRooms
+            
+            roomView.user = self.user
+            roomView.house.append(self.houses[indexPath.row])
+            
+        }
     }
     
 }

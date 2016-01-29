@@ -364,17 +364,18 @@
             </objects>
             <point key="canvasLocation" x="731" y="-147"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Rooms-->
         <scene sceneID="ZL6-pz-ST2">
             <objects>
-                <tableViewController id="EMX-4G-zUa" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pd1-Oq-Al9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="EMX-4G-zUa" customClass="HouseRooms" customModule="NRG" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="VOV-qp-fRn">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="K8t-ba-eeK">
-                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="K8t-ba-eeK">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="K8t-ba-eeK" id="QSa-GY-6fe">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -387,8 +388,15 @@
                             <outlet property="delegate" destination="EMX-4G-zUa" id="weH-jb-2eq"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Rooms" id="ran-SZ-GaE">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="nuy-qG-gnE">
+                            <connections>
+                                <action selector="addRoom:" destination="EMX-4G-zUa" id="ZkD-wM-8KC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Pd1-Oq-Al9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1424" y="-147"/>
         </scene>

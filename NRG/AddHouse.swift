@@ -58,7 +58,6 @@ class AddHouse: UIViewController {
         let parameters = ["name": String(name.text!), "owner": owner]
         
         
-        //post request will create the user and input username/password into database
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
                 print("Response_-------\(response!.statusCode)")
