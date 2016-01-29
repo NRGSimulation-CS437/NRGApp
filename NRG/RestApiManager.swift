@@ -30,6 +30,30 @@ class RestApiManager : NSObject {
         })
     }
     
+    //gets all houses linked to that owner
+    func getHouses(let owner: String, onCompletion: (JSON) -> Void) {
+        
+        let houseLink = link+"house/?&owner="+owner
+        print(houseLink)
+        makeHTTPGetRequest(houseLink, onCompletion: { json , err -> Void in
+            onCompletion(json)
+            print(json)
+            
+        })
+    }
+    
+    //gets all houses linked to that owner
+    func getRooms(let owner: String, let house: String, onCompletion: (JSON) -> Void) {
+        
+        let houseLink = link+"room/?&owner="+owner+"&house="+house
+        print(houseLink)
+        makeHTTPGetRequest(houseLink, onCompletion: { json , err -> Void in
+            onCompletion(json)
+            print(json)
+            
+        })
+    }
+    
     
     //makes the HTTPRequest
     func makeHTTPGetRequest(path: String, onCompletion: ServiceResponse)
@@ -40,12 +64,12 @@ class RestApiManager : NSObject {
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error in
             print(data)
-
+            
             let json:JSON = JSON(data: data!)
             onCompletion(json, error)
             print("yay")
         })
-    
+        
         task.resume()
     }
 }

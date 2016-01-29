@@ -19,6 +19,9 @@
 		0A680A181C49B9AC00020BB3 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A171C49B9AC00020BB3 /* Register.swift */; };
 		0A680A1A1C49C62B00020BB3 /* RestApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A191C49C62B00020BB3 /* RestApiManager.swift */; };
 		0A680A1C1C49C67300020BB3 /* SwiftyJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */; };
+		48E35A1A1C5B1DA100655FB6 /* HouseCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */; };
+		48E35A1C1C5B1E0F00655FB6 /* HouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A1B1C5B1E0F00655FB6 /* HouseCell.swift */; };
+		48E35A1E1C5B1EBC00655FB6 /* AddHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */; };
 		747168F1A1E824353C69CD89 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B48200A71D3F8C74A1DB45F8 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +63,9 @@
 		0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJson.swift; sourceTree = "<group>"; };
 		1C73F374FCD27C4B3B472927 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		29E3D5AA7CF9FFDE047E53B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCollectionView.swift; sourceTree = "<group>"; };
+		48E35A1B1C5B1E0F00655FB6 /* HouseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCell.swift; sourceTree = "<group>"; };
+		48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHouse.swift; sourceTree = "<group>"; };
 		B48200A71D3F8C74A1DB45F8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -115,8 +121,11 @@
 			isa = PBXGroup;
 			children = (
 				0A6809E41C49AC8600020BB3 /* AppDelegate.swift */,
+				48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */,
+				48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */,
 				0A6809E61C49AC8600020BB3 /* ViewController.swift */,
 				0A680A151C49B99700020BB3 /* Login.swift */,
+				48E35A1B1C5B1E0F00655FB6 /* HouseCell.swift */,
 				0A680A191C49C62B00020BB3 /* RestApiManager.swift */,
 				0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */,
 				0A680A171C49B9AC00020BB3 /* Register.swift */,
@@ -350,12 +359,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A6809E71C49AC8600020BB3 /* ViewController.swift in Sources */,
+				48E35A1C1C5B1E0F00655FB6 /* HouseCell.swift in Sources */,
 				0A6809E51C49AC8600020BB3 /* AppDelegate.swift in Sources */,
 				0A680A1A1C49C62B00020BB3 /* RestApiManager.swift in Sources */,
 				0A6809ED1C49AC8600020BB3 /* NRG.xcdatamodeld in Sources */,
 				0A680A161C49B99700020BB3 /* Login.swift in Sources */,
 				0A680A1C1C49C67300020BB3 /* SwiftyJson.swift in Sources */,
 				0A680A181C49B9AC00020BB3 /* Register.swift in Sources */,
+				48E35A1E1C5B1EBC00655FB6 /* AddHouse.swift in Sources */,
+				48E35A1A1C5B1DA100655FB6 /* HouseCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

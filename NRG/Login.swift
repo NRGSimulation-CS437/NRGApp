@@ -6,16 +6,17 @@
 //  Copyright © 2016 Kevin Argumedo. All rights reserved.
 //
 
-
 import Foundation
 import UIKit
 
 class Login: UIViewController {
     
+    var user = [JSON]()
+    
     //fields for the login view
     @IBOutlet var usName: UITextField!
     @IBOutlet var usPassword: UITextField!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -41,7 +42,7 @@ class Login: UIViewController {
         let t = 2
         
         print(uName, " ", uPassword, t)
-
+        
         
         //check will confirm username and password match
         var check = false
@@ -56,7 +57,7 @@ class Login: UIViewController {
                 if(String(usr["username"]) == uName && uPassword == String(usr["password"]))
                 {
                     check =  true;
-
+                    self.user.append(usr)
                 }
             }
             
@@ -69,7 +70,7 @@ class Login: UIViewController {
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
-                    self.performSegueWithIdentifier("Login", sender: self)
+                    self.performSegueWithIdentifier("toLogin", sender: self)
                 }
             }
             else
@@ -102,5 +103,17 @@ class Login: UIViewController {
         
         self.presentViewController(myAlert, animated: true, completion: nil)
         
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "toLogin")
+        {
+            
+            let navDest = segue.destinationViewController as! UINavigationController
+            
+            let houseCollect = navDest.viewControllers.first as! HouseCollectionView
+            
+            houseCollect.user =  self.user
+        }
     }
 }
