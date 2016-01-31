@@ -26,7 +26,6 @@ class HouseRooms : UITableViewController
     
     override func viewWillAppear(animated: Bool) {
         
-        print("im appearing")
         self.rooms.removeAll()
 
         let parameters  = ["owner" : String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
@@ -36,12 +35,10 @@ class HouseRooms : UITableViewController
                 
                 if let JSON1 = response.result.value
                 {
-                    print(JSON1)
                     for(_,jso) in JSON(JSON1)
                     {
                         self.rooms.append(jso)
                         
-                        print("453q9h8eriunfdnnhjfdfhfhjdhjgd\nndsfafasdfasd\n",self.rooms.isEmpty)
                     }
                     if(self.rooms.isEmpty)
                     {

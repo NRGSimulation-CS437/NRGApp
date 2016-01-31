@@ -313,7 +313,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7xK-iE-gAK">
-                                <rect key="frame" x="0.0" y="0.0" width="593" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.084535634795265255" green="0.24950901860716559" blue="0.58455528846153848" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="IE7-fI-cOz">
                                     <size key="itemSize" width="150" height="150"/>
@@ -368,10 +368,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7xK-iE-gAK" firstAttribute="top" secondItem="Odu-bG-8uW" secondAttribute="top" id="8Ff-kt-eQq"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="7xK-iE-gAK" secondAttribute="trailing" constant="-13" id="Lxl-BT-kYp"/>
-                            <constraint firstItem="7xK-iE-gAK" firstAttribute="leading" secondItem="Odu-bG-8uW" secondAttribute="leading" id="N7x-Zm-hpg"/>
-                            <constraint firstItem="7xK-iE-gAK" firstAttribute="bottom" secondItem="stY-iW-Chx" secondAttribute="top" id="YZl-OJ-eyf"/>
+                            <constraint firstItem="7xK-iE-gAK" firstAttribute="leading" secondItem="Odu-bG-8uW" secondAttribute="leading" id="7ht-gD-EZy"/>
+                            <constraint firstItem="7xK-iE-gAK" firstAttribute="bottom" secondItem="stY-iW-Chx" secondAttribute="top" id="Wet-h4-iyI"/>
+                            <constraint firstItem="7xK-iE-gAK" firstAttribute="top" secondItem="Odu-bG-8uW" secondAttribute="top" id="a0p-Z6-hS7"/>
+                            <constraint firstAttribute="trailing" secondItem="7xK-iE-gAK" secondAttribute="trailing" id="zJ5-By-5A6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Houses" id="DF3-An-ktd">
