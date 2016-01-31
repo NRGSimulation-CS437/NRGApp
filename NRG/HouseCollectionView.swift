@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import Alamofire
 
 class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
     
@@ -33,19 +33,24 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         houses.removeAll()
         houseNames.removeAll()
         
-        RestApiManager.sharedInstance.getHouses(String(self.user[0]["username"])){ json -> Void in
-            
-            //grabs the user returned with that username and password.
-            print(json)
-            for (_,house) in json
-            {
-                self.houses.append(house)
-                self.houseNames.append(String(house["name"]))
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                self.collectionView.reloadData()
-            }
+        let myURL = "http://172.249.231.197:1337/house/"
+        
+        let parameters = ["owner": String(self.user[0]["username"])]
+        
+        Alamofire.request(.GET, myURL, parameters: parameters)
+            .responseJSON { response in
+                
+                if let JSON1 = response.result.value
+                {
+                    for(_,hse) in JSON(JSON1)
+                    {
+                        self.houses.append(hse)
+                        self.houseNames.append(String(hse["name"]))
+                    }
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.collectionView.reloadData()
+                    }
+                }
         }
     }
     
@@ -61,7 +66,9 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath)
             as! HouseCell
-        cell.textDisplay.text = houseNames[indexPath.row]
+        
+        cell.textDisplay.text = String(houses[indexPath.row]["name"])
+        cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
         return cell
     }
     
@@ -71,22 +78,6 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        //when house is added, use the following segu
-//        if(segue.identifier == "toHouse")
-//        {
-//            
-//            var dest = self.collectionView!.indexPathsForSelectedItems()!
-//            
-//            let indexPath = dest[0] as NSIndexPath
-//            
-//            let houseView = segue.destinationViewController as! HouseView
-//            
-//            house.append(self.houses[indexPath.row])
-//            
-//            houseView.house = self.house
-//            houseView.user = self.user
-//        }
-        
         
         if(segue.identifier == "toHouseAddition")
         {

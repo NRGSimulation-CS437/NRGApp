@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class Login: UIViewController {
     
@@ -43,46 +44,40 @@ class Login: UIViewController {
         
         print(uName, " ", uPassword, t)
         
+        let myURL = "http://172.249.231.197:1337/user/"
         
-        //check will confirm username and password match
-        var check = false
+        let parameters = ["username": uName, "password": uPassword]
         
-        
-        
-        RestApiManager.sharedInstance.getUser(uName, pass: uPassword){ json -> Void in
-            
-            //grabs the user returned with that username and password.
-            for (_,usr) in json
-            {
-                if(String(usr["username"]) == uName && uPassword == String(usr["password"]))
+        Alamofire.request(.GET, myURL, parameters: parameters)
+            .responseJSON { response in
+                
+                if let JSON1 = response.result.value
                 {
-                    check =  true;
-                    self.user.append(usr)
-                }
-            }
-            
-            print(check)
-            
-            //checks is password and username match
-            if(check)
-            {
-                dispatch_async(dispatch_get_main_queue()) {
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn")
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    for(_,usr) in JSON(JSON1)
+                    {
+                        if(String(usr["username"]) == uName && uPassword == String(usr["password"]))
+                        {
+                            self.user.append(usr)
+                            self.performSegueWithIdentifier("toLogin", sender: self)
+                        }
+                        else
+                        {
+                            dispatch_async(dispatch_get_main_queue())
+                            {
+                                self.displayAlertMessage("Username and Password do not match")
+                            }
+                        }
+                    }
                     
-                    self.performSegueWithIdentifier("toLogin", sender: self)
+                    if(self.user.isEmpty)
+                    {
+                        dispatch_async(dispatch_get_main_queue())
+                            {
+                                self.displayAlertMessage("Username and Password do not match")
+                        }
+                    }
                 }
-            }
-            else
-            {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.displayAlertMessage("Username and Password do not match")
-                    
-                }
-            }
-            
         }
-        
     }
     
     //sends user to registration view

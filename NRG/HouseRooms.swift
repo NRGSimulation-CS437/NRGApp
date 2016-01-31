@@ -26,26 +26,35 @@ class HouseRooms : UITableViewController
     
     override func viewWillAppear(animated: Bool) {
         
+        print("im appearing")
         self.rooms.removeAll()
-        RestApiManager.sharedInstance.getRooms(String(self.user[0]["username"]), house: String(self.house[0]["name"])){ json -> Void in
-            
-            for (_,room) in json
-            {
-                self.rooms.append(room)
-            }
-            
-            if(self.rooms.isEmpty)
-            {
-                self.rooms.removeAll()
+
+        let parameters  = ["owner" : String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
+        
+        Alamofire.request(.GET, "http://ignacio.kevinhuynh.net:1337/rooms/", parameters: parameters)
+            .responseJSON { response in
                 
-                let randomObject : JSON =  ["name": "You have not added any rooms!", "extra": "gibberish no one will read"]
-                
-                self.rooms.append(randomObject)
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                self.tableView.reloadData()
-            }
+                if let JSON1 = response.result.value
+                {
+                    print(JSON1)
+                    for(_,jso) in JSON(JSON1)
+                    {
+                        self.rooms.append(jso)
+                        
+                        print("453q9h8eriunfdnnhjfdfhfhjdhjgd\nndsfafasdfasd\n",self.rooms.isEmpty)
+                    }
+                    if(self.rooms.isEmpty)
+                    {
+                        self.rooms.removeAll()
+                        
+                        let randomObject : JSON =  ["name": "You have not added any rooms!", "extra": "gibberish no one will read"]
+                        
+                        self.rooms.append(randomObject)
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                }
         }
     }
 
@@ -112,7 +121,6 @@ class HouseRooms : UITableViewController
 
             Alamofire.request(.POST, myURL, parameters: parameters)
                 .response { request, response, data, error in
-                    print(request?.URLRequest)
                     print("Response_-------\(response!.statusCode)")
                     
                     if(response!.statusCode != 400)
@@ -121,9 +129,12 @@ class HouseRooms : UITableViewController
                         
                         dispatch_async(dispatch_get_main_queue()) {
                             
-                            if(self.rooms[0]["name"] == "You have not added any rooms!")
+                            if(self.rooms.count == 1)
                             {
-                                self.rooms.removeAll()
+                                if(self.rooms[0]["name"] == "You have not added any rooms!")
+                                {
+                                    self.rooms.removeAll()
+                                }
                             }
                             
                             let newRoom : JSON =  ["name": String(rName!), "owner": owner, "house":cHouse]
