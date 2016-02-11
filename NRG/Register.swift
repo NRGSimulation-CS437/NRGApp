@@ -21,6 +21,8 @@ class Register: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,6 +85,13 @@ class Register: UIViewController {
         
         self.performSegueWithIdentifier("toLogin", sender: self)
     }
+    
+    //rmeoves keyboard on tap on screen
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+
     
     
     //displays alert with a certain message.

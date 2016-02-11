@@ -152,5 +152,18 @@ class HouseRooms : UITableViewController
         
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "toDevices")
+        {
+            let indexPath : NSIndexPath = self.tableView.indexPathForSelectedRow!
+
+            let dest = segue.destinationViewController as! DevicesCollection
+            
+            dest.user = self.user[0]
+            dest.house = self.house[0]
+            dest.room = self.rooms[indexPath.row]
+        }
+    }
         
 }
