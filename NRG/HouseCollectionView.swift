@@ -69,6 +69,8 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         
         cell.textDisplay.text = String(houses[indexPath.row]["name"])
         cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
+        cell.watts.text = "Watts : 500"
+        
         return cell
     }
     

@@ -13,6 +13,8 @@ class HouseCell: UICollectionViewCell {
     
     @IBOutlet var textDisplay: UILabel!
     
+    @IBOutlet weak var watts: UILabel!
+    
     @IBOutlet weak var imageView: UIImageView!
 }
 

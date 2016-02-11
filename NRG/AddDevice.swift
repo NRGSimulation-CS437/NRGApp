@@ -106,7 +106,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         let owner = String(self.user["username"])
         
-        let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["name"]), "house": String(self.house["name"]), "watts": dWatts ]
+        let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["name"]), "house": String(self.house["name"]), "watts": dWatts, "trigger": "Off"]
         
         
         Alamofire.request(.POST, myURL, parameters: parameters)
