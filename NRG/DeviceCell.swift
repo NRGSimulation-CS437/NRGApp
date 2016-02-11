@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class DeviceCell: UICollectionViewCell {
-
-    @IBOutlet weak var textDisplay: UITextView!
+    
+    @IBOutlet weak var deviceName: UILabel!
     
     @IBOutlet weak var imageView: UIImageView!
 }
