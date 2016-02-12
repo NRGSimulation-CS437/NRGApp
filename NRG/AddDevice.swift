@@ -80,7 +80,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     @IBAction func addHouse(sender: AnyObject)
     {
         let dName = String(name.text!)
-        let dWatts = String(watts.text!)
+        var dWatts = String(watts.text!)
         
         if(dName.isEmpty)
         {
@@ -102,8 +102,10 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             }
         }
         
-        if let _ = Double(dWatts)
+        if let doubleWatt = Double(dWatts)
         {
+            let tempWatts = Double(round(doubleWatt*100)/100)
+            dWatts = String(tempWatts)
         }
         else
         {
