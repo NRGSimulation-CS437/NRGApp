@@ -65,7 +65,12 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         cell.deviceName.text = String(devices[indexPath.row]["name"])
         cell.imageView.image = UIImage(named: String(devices[indexPath.row]["image"]))
-        cell.watts.text = "Watts: " +  String(devices[indexPath.row]["watts"])
+        
+        let tStringWatt = String(devices[indexPath.row]["watts"])
+                
+        let dWatts = Double(tStringWatt)
+        
+        cell.watts.text = "Watts: " +  String(dWatts!)
         
         if(String(devices[indexPath.row]["trigger"]) == "Off")
         {
