@@ -340,9 +340,6 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
-                                                    <connections>
-                                                        <outletCollection property="gestureRecognizers" destination="IDJ-Ud-Gqi" appends="YES" id="G0i-Ta-h3S"/>
-                                                    </connections>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SJZ-Aj-HaN">
                                                     <rect key="frame" x="0.0" y="0.0" width="150" height="124"/>
@@ -353,9 +350,6 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
-                                                    <connections>
-                                                        <outletCollection property="gestureRecognizers" destination="IDJ-Ud-Gqi" appends="YES" id="ygR-He-UQi"/>
-                                                    </connections>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -378,8 +372,6 @@
                                             <outlet property="imageView" destination="SJZ-Aj-HaN" id="n7j-7W-cO0"/>
                                             <outlet property="textDisplay" destination="LEo-Uu-U1G" id="ecv-Ub-8Oh"/>
                                             <outlet property="watts" destination="PfL-jJ-6Ax" id="fhS-h7-THn"/>
-                                            <outletCollection property="gestureRecognizers" destination="IDJ-Ud-Gqi" appends="YES" id="9Nf-FI-mKr"/>
-                                            <outletCollection property="gestureRecognizers" destination="IDJ-Ud-Gqi" appends="YES" id="pyJ-3b-GXc"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -416,11 +408,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DTO-FN-mIM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="IDJ-Ud-Gqi">
-                    <connections>
-                        <action selector="holdDelete:" destination="iCO-v8-IxP" id="LDl-QC-UZk"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="655" y="-175"/>
         </scene>

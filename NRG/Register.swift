@@ -59,7 +59,6 @@ class Register: UIViewController {
         //post request will create the user and input username/password into database
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
-                print("Response_-------\(response!.statusCode)")
                 
                 if(response!.statusCode != 400)
                 {

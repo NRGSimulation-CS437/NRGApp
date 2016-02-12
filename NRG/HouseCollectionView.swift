@@ -99,14 +99,6 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         self.performSegueWithIdentifier("toHouse", sender: self)
     }
     
-    @IBAction func holdDelete(sender: UILongPressGestureRecognizer) {
-        if sender.state != UIGestureRecognizerState.Began{
-            return;
-        }
-        
-        print("here")
-    }
-    
     @IBAction func logoutButton(sender: AnyObject) {
         
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn")

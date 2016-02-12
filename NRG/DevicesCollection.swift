@@ -82,7 +82,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         cell.trigger?.layer.setValue(indexPath, forKey: "sendIndex")
         cell.trigger?.layer.setValue(cell, forKey: "sendCell")
-        print("here")
         cell.trigger?.addTarget(self, action: "changeTrigger:", forControlEvents: UIControlEvents.TouchUpInside)
         
         return cell
@@ -90,7 +89,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     
     func changeTrigger(sender: UISwitch)
     {
-        print("2")
         let cell = sender.layer.valueForKey("sendCell") as! DeviceCell
         let index = sender.layer.valueForKey("sendIndex") as! NSIndexPath
         var trigger = "Off"

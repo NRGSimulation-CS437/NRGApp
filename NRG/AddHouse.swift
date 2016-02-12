@@ -81,7 +81,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
-                print("Response_-------\(response!.statusCode)")
                 
                 if(response!.statusCode != 400)
                 {
@@ -112,7 +111,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        print(houseImages[row])
         self.imageView.image = UIImage(named: String(houseImages[row]))
         self.hImage = houseImages[row]
     }

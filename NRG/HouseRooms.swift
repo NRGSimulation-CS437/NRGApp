@@ -82,8 +82,15 @@ class HouseRooms : UITableViewController
                         }
                     }
                     
+                    if(String(self.rooms[indexPath.row]) == "You have not added any rooms!")
+                    {
+                        cell.textLabel?.text = String(self.rooms[indexPath.row]["name"])
+                    }
+                    else
+                    {
+                        cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
+                    }
                     
-                    cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
 
                 }
         }
@@ -141,7 +148,6 @@ class HouseRooms : UITableViewController
 
             Alamofire.request(.POST, myURL, parameters: parameters)
                 .response { request, response, data, error in
-                    print("Response_-------\(response!.statusCode)")
                     
                     if(response!.statusCode != 400)
                     {

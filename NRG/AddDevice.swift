@@ -121,7 +121,6 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
-                print("Response_-------\(response!.statusCode)")
                 
                 if(response!.statusCode != 400)
                 {
