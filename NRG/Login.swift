@@ -12,7 +12,7 @@ import Alamofire
 
 class Login: UIViewController {
     
-    var user = [JSON]()
+    var user : JSON!
     
     //fields for the login view
     @IBOutlet var usName: UITextField!
@@ -26,10 +26,34 @@ class Login: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        
+        if NSUserDefaults.standardUserDefaults().valueForKey("username") != nil
+        {
+            if(NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn"))
+            {
+                self.view.hidden = true
+                let tempString = String(NSUserDefaults.standardUserDefaults().valueForKey("username")!)
+                let tempPass = String(NSUserDefaults.standardUserDefaults().valueForKey("password")!)
+                
+                let tempUser = ["username" : tempString, "password" : tempPass]
+                self.user = JSON(tempUser)
+                print(self.user)
+                
+                self.performSegueWithIdentifier("toLogin", sender: self)
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.performSegueWithIdentifier("toLogin", sender: self) })
+            }
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
     
     //login Button
     @IBAction func loginAction(sender: AnyObject) {
@@ -60,8 +84,15 @@ class Login: UIViewController {
                     {
                         if(String(usr["username"]) == uName && uPassword == String(usr["password"]))
                         {
-                            self.user.append(usr)
+                            self.user = usr
+                            
+                            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn");
+                            NSUserDefaults.standardUserDefaults().setValue(String(self.user["username"]), forKey: "username")
+                            NSUserDefaults.standardUserDefaults().setValue(String(self.user["password"]), forKey: "password")
+                            NSUserDefaults.standardUserDefaults().synchronize();
+                            
                             self.performSegueWithIdentifier("toLogin", sender: self)
+
                         }
                         else
                         {

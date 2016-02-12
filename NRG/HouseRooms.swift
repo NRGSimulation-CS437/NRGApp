@@ -13,7 +13,7 @@ import Alamofire
 class HouseRooms : UITableViewController
 {
     var rooms = [JSON]()
-    var user = [JSON]()
+    var user : JSON!
     var house = [JSON]()
     
     
@@ -29,7 +29,7 @@ class HouseRooms : UITableViewController
         
         self.rooms.removeAll()
 
-        let parameters  = ["owner" : String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
+        let parameters  = ["owner" : String(self.user["username"]), "house": String(self.house[0]["name"])]
         
         Alamofire.request(.GET, "http://ignacio.kevinhuynh.net:1337/rooms/", parameters: parameters)
             .responseJSON { response in
@@ -67,7 +67,7 @@ class HouseRooms : UITableViewController
         
         var counter : Double = 0
         
-        let parameters = ["trigger" : "on", "room":String(self.rooms[indexPath.row]["name"]), "owner": String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
+        let parameters = ["trigger" : "on", "room":String(self.rooms[indexPath.row]["name"]), "owner": String(self.user["username"]), "house": String(self.house[0]["name"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
@@ -82,7 +82,7 @@ class HouseRooms : UITableViewController
                         }
                     }
                     
-                                        
+                    
                     cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
 
                 }
@@ -134,7 +134,7 @@ class HouseRooms : UITableViewController
             
             let myURL = "http://172.249.231.197:1337/rooms/create?"
             
-            let owner = String(self.user[0]["username"])
+            let owner = String(self.user["username"])
             let cHouse = String(self.house[0]["name"])
             
             let parameters = ["name": String(rName!), "owner": owner, "house": cHouse]
@@ -183,7 +183,7 @@ class HouseRooms : UITableViewController
 
             let dest = segue.destinationViewController as! DevicesCollection
             
-            dest.user = self.user[0]
+            dest.user = self.user
             dest.house = self.house[0]
             dest.room = self.rooms[indexPath.row]
         }

@@ -14,7 +14,7 @@ import Alamofire
 class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
 {
     
-    var user = [JSON]()
+    var user : JSON!
     var houses = [String]()
     
     var houseImages = ["Apartment", "Beach Cabin", "Beach House", "Cabin in the Woods", "Penthouse", "Winter Cabin"]
@@ -73,9 +73,8 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         
         let myURL = "http://172.249.231.197:1337/house/create?"
-        
-        let currentUser = self.user[0]
-        let owner = String(currentUser["username"])
+    
+        let owner = String(user["username"])
         
         let parameters = ["name": String(name.text!), "owner": owner, "image": self.hImage]
         

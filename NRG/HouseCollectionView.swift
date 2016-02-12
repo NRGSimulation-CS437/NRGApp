@@ -14,7 +14,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var user = [JSON]()
+    var user : JSON!
     
     var houses = [JSON]()
     var houseNames = [String]()
@@ -35,7 +35,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         
         let myURL = "http://172.249.231.197:1337/house/"
         
-        let parameters = ["owner": String(self.user[0]["username"])]
+        let parameters = ["owner": String(self.user["username"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
@@ -69,8 +69,28 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         
         cell.textDisplay.text = String(houses[indexPath.row]["name"])
         cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
-        cell.watts.text = "Watts : 500"
         
+        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
+        
+        var counter : Double = 0
+        
+        let parameters = ["trigger" : "on", "owner": String(self.user["username"]), "house": String(self.houses[indexPath.row]["name"])]
+        
+        Alamofire.request(.GET, myURL, parameters: parameters)
+            .responseJSON { response in
+                
+                if let JSON1 = response.result.value
+                {
+                    for(_,dev) in JSON(JSON1)
+                    {
+                        if let tempCount = Double(String(dev["watts"]))
+                        {
+                            counter += tempCount
+                        }
+                    }
+                    cell.watts?.text = "Watts:  " + String(counter)
+                }
+        }
         return cell
     }
     
@@ -78,6 +98,24 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     {
         self.performSegueWithIdentifier("toHouse", sender: self)
     }
+    
+    @IBAction func holdDelete(sender: UILongPressGestureRecognizer) {
+        if sender.state != UIGestureRecognizerState.Began{
+            return;
+        }
+        
+        print("here")
+    }
+    
+    @IBAction func logoutButton(sender: AnyObject) {
+        
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn")
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.performSegueWithIdentifier("toLogin", sender: self)
+        }
+    }
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
