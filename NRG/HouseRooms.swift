@@ -16,6 +16,7 @@ class HouseRooms : UITableViewController
     var user = [JSON]()
     var house = [JSON]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -61,8 +62,31 @@ class HouseRooms : UITableViewController
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+    
+        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
         
-        cell.textLabel?.text = String(self.rooms[indexPath.row]["name"])
+        var counter : Double = 0
+        
+        let parameters = ["trigger" : "on", "room":String(self.rooms[indexPath.row]["name"]), "owner": String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
+        
+        Alamofire.request(.GET, myURL, parameters: parameters)
+            .responseJSON { response in
+                
+                if let JSON1 = response.result.value
+                {
+                    for(_,dev) in JSON(JSON1)
+                    {
+                        if let tempCount = Double(String(dev["watts"]))
+                        {
+                            counter += tempCount
+                        }
+                    }
+                    
+                                        
+                    cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
+
+                }
+        }
         
         return cell
     }
@@ -107,7 +131,6 @@ class HouseRooms : UITableViewController
                     return
                 }
             }
-            
             
             let myURL = "http://172.249.231.197:1337/rooms/create?"
             

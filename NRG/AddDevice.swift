@@ -102,6 +102,16 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             }
         }
         
+        if let _ = Double(dWatts)
+        {
+        }
+        else
+        {
+            self.displayMessage("Watts input must be a number!")
+            return
+        }
+        
+        
         let myURL = "http://ignacio.kevinhuynh.net:1337/devices/create?"
         
         let owner = String(self.user["username"])
@@ -157,7 +167,6 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         myAlert.addAction(okAction);
         self.presentViewController(myAlert, animated:true, completion: nil);
     }
-    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
