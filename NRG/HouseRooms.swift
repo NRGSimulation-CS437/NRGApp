@@ -74,8 +74,6 @@ class HouseRooms : UITableViewController
                 
                 if let JSON1 = response.result.value
                 {
-                    print(parameters)
-                    print(response)
                     for(_,dev) in JSON(JSON1)
                     {
                         if let tempCount = Double(String(dev["watts"]))
@@ -153,10 +151,12 @@ class HouseRooms : UITableViewController
             
             let parameters = ["name": String(rName!), "owner": owner, "house": cHouse]
 
-            Alamofire.request(.POST, myURL, parameters: parameters)
-                .response { request, response, data, error in
+            Alamofire.request(.POST, myURL, parameters: parameters, encoding: .JSON)
+                .responseJSON { response in
                     
-                    if(response!.statusCode != 400)
+                    print(response)
+                    
+                    if let object = response.result.value
                     {
                         self.displayMessage("A new Room has been added!")
                         
@@ -170,14 +170,14 @@ class HouseRooms : UITableViewController
                                 }
                             }
                             
-                            let newRoom : JSON =  ["name": String(rName!), "owner": owner, "house":cHouse]
-
-                            self.rooms.append(newRoom)
+                            self.rooms.append(JSON(object))
                             
                             self.tableView.reloadData()
                         }
+
                     }
-            }
+                    
+                }
         }
         
         actionSheetController.addAction(nextAction)

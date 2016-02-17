@@ -196,7 +196,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                         }
                 }
                 
-                let tempDevicesURL = "http://ignacio.kevinhuynh.net:1337/devices?owner="+String(self.houses[c.row]["owner"]) + "&house=" + String(self.houses[c.row]["name"])
+                let tempDevicesURL = "http://ignacio.kevinhuynh.net:1337/devices?owner="+String(self.houses[c.row]["owner"]) + "&house=" + String(self.houses[c.row]["id"])
                 
                 Alamofire.request(.GET, tempDevicesURL)
                     .responseJSON { response in
