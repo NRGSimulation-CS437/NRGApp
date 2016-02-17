@@ -74,7 +74,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         let myURL = "http://172.249.231.197:1337/house/create?"
     
-        let owner = String(user["username"])
+        let owner = String(user["id"])
         
         let parameters = ["name": String(name.text!), "owner": owner, "image": self.hImage]
         

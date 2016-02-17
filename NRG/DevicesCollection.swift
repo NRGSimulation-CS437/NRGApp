@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Alamofire
 
-class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate {
   
     var devices = [JSON]()
     var user = JSON!()
@@ -25,6 +25,14 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
         }
+        
+        
+        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.collectionView.addGestureRecognizer(lpgr)
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -32,17 +40,18 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     override func viewWillAppear(animated: Bool) {
-        let myURL = "http://172.249.231.197:1337/devices/"
+        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
         
         self.devices.removeAll()
         
-        let parameters = ["owner": String(self.user["username"]), "room": String(self.room["name"]), "": String(self.house["name"])]
+        let parameters = ["owner": String(self.user["id"]), "room": String(self.room["id"]), "house": String(self.house["id"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
                 
                 if let JSON1 = response.result.value
                 {
+                    print(response)
                     for(_,dev) in JSON(JSON1)
                     {
                         self.devices.append(dev)
@@ -65,6 +74,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         cell.deviceName.text = String(devices[indexPath.row]["name"])
         cell.imageView.image = UIImage(named: String(devices[indexPath.row]["image"]))
+        cell.deviceID = String(devices[indexPath.row]["id"])
         
         let tStringWatt = String(devices[indexPath.row]["watts"])
                 
@@ -128,6 +138,126 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 }
             }
         )
+    }
+    
+    func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
+        }
+        
+        let p = gestureReconizer.locationInView(self.collectionView)
+        let indexPath = self.collectionView.indexPathForItemAtPoint(p)
+        
+        if let index = indexPath {
+            //       let cell = self.collectionView.cellForItemAtIndexPath(index)
+            print("tou tocuej")
+            self.editMenu(index)
+        }
+    }
+    
+    func editMenu(c : NSIndexPath)
+    {
+        let cell = self.collectionView.cellForItemAtIndexPath(c) as! DeviceCell
+        
+        let actionSheetController: UIAlertController = UIAlertController(title: "Device Options", message: String(cell.deviceName.text!), preferredStyle: .ActionSheet)
+        
+        let editNameAction: UIAlertAction = UIAlertAction(title: "Edit Name", style: .Default) { action -> Void in
+            
+            let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
+            print(c)
+            print(tempCell.textDisplay.text!)
+            //http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
+            
+        }
+        
+        
+        let deleteHouseAction: UIAlertAction = UIAlertAction(title: "Delete Device", style: .Default) { action -> Void in
+            
+            let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! DeviceCell
+            
+            let tempString = "Are you sure you want to delete \"" + String(tempCell.deviceName.text!) + "\"?"
+            
+            let deleteAlert: UIAlertController = UIAlertController(title: "Confirm Deletion", message: tempString, preferredStyle:  .Alert)
+            
+            let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
+                Void in
+                
+                let myURL = "http://ignacio.kevinhuynh.net:1337/devices/destroy/" + tempCell.deviceID!
+                
+                Alamofire.request(.POST, myURL)
+                    .response { request, response, data, error in
+                        
+                        self.displayMessage("Device has been deleted.")
+                        
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.collectionView.reloadData()
+                        }
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.devices.removeAtIndex(c.row)
+                    self.collectionView.reloadData()
+                }
+            }
+            
+            let cancelDelete: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                //do nothing on cancel
+            }
+            
+            deleteAlert.addAction(confirmDelete)
+            deleteAlert.addAction(cancelDelete)
+            self.presentViewController(deleteAlert, animated: true, completion: nil)
+        }
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+            //do nothing on cancel
+        }
+        
+        actionSheetController.addAction(editNameAction)
+        actionSheetController.addAction(deleteHouseAction)
+        actionSheetController.addAction(cancelAction)
+        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.collectionView.reloadData()
+        }
+        
+    }
+    
+    func editAlert(c : UICollectionViewCell)
+    {
+        let cell = c as! HouseCell
+        print(cell.textDisplay.text!)
+        
+        var nameTextField: UITextField?
+        
+        let alertController = UIAlertController(title: "Edit House Name", message: "Please enter new name for your house.", preferredStyle: .Alert)
+        
+        let submit = UIAlertAction(title: "Submit", style: .Default, handler: { (action) -> Void in
+            print("submitting name change")
+            print(cell.textDisplay.text)
+        })
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            //do nnothing
+        }
+        alertController.addAction(submit)
+        alertController.addAction(cancel)
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            // Enter the textfiled customization code here.
+            nameTextField = textField
+            nameTextField?.placeholder = "Enter New Name"
+        }
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func displayMessage(message: String)
+    {
+        let myAlert = UIAlertController(title:"Alert", message:message, preferredStyle: UIAlertControllerStyle.Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+        myAlert.addAction(okAction);
+        self.presentViewController(myAlert, animated:true, completion: nil);
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

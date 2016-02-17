@@ -29,7 +29,7 @@ class HouseRooms : UITableViewController
         
         self.rooms.removeAll()
 
-        let parameters  = ["owner" : String(self.user["username"]), "house": String(self.house[0]["name"])]
+        let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house[0]["id"])]
         
         Alamofire.request(.GET, "http://ignacio.kevinhuynh.net:1337/rooms/", parameters: parameters)
             .responseJSON { response in
@@ -67,13 +67,15 @@ class HouseRooms : UITableViewController
         
         var counter : Double = 0
         
-        let parameters = ["trigger" : "on", "room":String(self.rooms[indexPath.row]["name"]), "owner": String(self.user["username"]), "house": String(self.house[0]["name"])]
+        let parameters = ["trigger" : "On", "room": String(self.rooms[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house[0]["id"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
                 
                 if let JSON1 = response.result.value
                 {
+                    print(parameters)
+                    print(response)
                     for(_,dev) in JSON(JSON1)
                     {
                         if let tempCount = Double(String(dev["watts"]))
@@ -86,10 +88,14 @@ class HouseRooms : UITableViewController
                     {
                         cell.textLabel?.text = String(self.rooms[indexPath.row]["name"])
                         cell.textLabel?.textAlignment = .Center
+                        cell.userInteractionEnabled = false
                     }
                     else
                     {
                         cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
+                        cell.textLabel?.textAlignment = .Left
+                        cell.userInteractionEnabled = true
+
                     }
                     
 
@@ -135,15 +141,15 @@ class HouseRooms : UITableViewController
             {
                 if(String(rName!) == String(room["name"]))
                 {
-                    self.displayMessage("You already have a house with that name")
+                    self.displayMessage("You already have a room with that name")
                     return
                 }
             }
             
             let myURL = "http://172.249.231.197:1337/rooms/create?"
             
-            let owner = String(self.user["username"])
-            let cHouse = String(self.house[0]["name"])
+            let owner = String(self.user["id"])
+            let cHouse = String(self.house[0]["id"])
             
             let parameters = ["name": String(rName!), "owner": owner, "house": cHouse]
 

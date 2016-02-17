@@ -20,4 +20,6 @@ class DeviceCell: UICollectionViewCell {
     @IBOutlet weak var trigger: UISwitch!
     
     @IBOutlet weak var imageView: UIImageView!
+    
+    var deviceID : String!
 }

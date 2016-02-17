@@ -16,5 +16,7 @@ class HouseCell: UICollectionViewCell {
     @IBOutlet weak var watts: UILabel!
     
     @IBOutlet weak var imageView: UIImageView!
+    
+    var houseID : String!
 }
 

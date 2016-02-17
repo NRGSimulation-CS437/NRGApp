@@ -32,17 +32,20 @@ class Login: UIViewController {
         {
             if(NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn"))
             {
-                self.view.hidden = true
-                let tempString = String(NSUserDefaults.standardUserDefaults().valueForKey("username")!)
-                let tempPass = String(NSUserDefaults.standardUserDefaults().valueForKey("password")!)
-                
-                let tempUser = ["username" : tempString, "password" : tempPass]
-                self.user = JSON(tempUser)
-                
-                self.performSegueWithIdentifier("toLogin", sender: self)
-                
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.performSegueWithIdentifier("toLogin", sender: self) })
+                if NSUserDefaults.standardUserDefaults().valueForKey("id") != nil
+                {
+                    self.view.hidden = true
+                    let tempString = String(NSUserDefaults.standardUserDefaults().valueForKey("username")!)
+                    let tempPass = String(NSUserDefaults.standardUserDefaults().valueForKey("password")!)
+                    let tempID = String(NSUserDefaults.standardUserDefaults().valueForKey("id")!)
+                    let tempUser = ["username" : tempString, "password" : tempPass, "id" : tempID]
+                    self.user = JSON(tempUser)
+                    
+                    self.performSegueWithIdentifier("toLogin", sender: self)
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.performSegueWithIdentifier("toLogin", sender: self) })
+                }
             }
         }
     }
@@ -85,6 +88,7 @@ class Login: UIViewController {
                             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn");
                             NSUserDefaults.standardUserDefaults().setValue(String(self.user["username"]), forKey: "username")
                             NSUserDefaults.standardUserDefaults().setValue(String(self.user["password"]), forKey: "password")
+                            NSUserDefaults.standardUserDefaults().setValue(String(self.user["id"]), forKey: "id")
                             NSUserDefaults.standardUserDefaults().synchronize();
                             confirmUser = false
                             self.performSegueWithIdentifier("toLogin", sender: self)

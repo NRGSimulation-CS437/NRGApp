@@ -41,6 +41,9 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
+                
+        let tap2: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap2)
         
         dispatch_async(dispatch_get_main_queue()) {
             self.picker.reloadAllComponents()
@@ -116,9 +119,9 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         let myURL = "http://ignacio.kevinhuynh.net:1337/devices/create?"
         
-        let owner = String(self.user["username"])
+        let owner = String(self.user["id"])
         
-        let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["name"]), "house": String(self.house["name"]), "watts": dWatts, "trigger": "Off"]
+        let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
         
         
         Alamofire.request(.POST, myURL, parameters: parameters)
