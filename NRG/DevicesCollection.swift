@@ -168,7 +168,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         }
         
         
-        let deleteHouseAction: UIAlertAction = UIAlertAction(title: "Delete Device", style: .Default) { action -> Void in
+        let deleteDeviceAction: UIAlertAction = UIAlertAction(title: "Delete Device", style: .Default) { action -> Void in
             
             let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! DeviceCell
             
@@ -208,7 +208,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         }
         
         actionSheetController.addAction(editNameAction)
-        actionSheetController.addAction(deleteHouseAction)
+        actionSheetController.addAction(deleteDeviceAction)
         actionSheetController.addAction(cancelAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
         
@@ -220,9 +220,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     
     func editAlert(c : NSIndexPath)
     {
-        //  http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
-        //        let cell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
-        
         var nameTextField: UITextField!
         
         let alertController = UIAlertController(title: "Edit Device Name", message: "Please enter new name for your device.", preferredStyle: .Alert)
