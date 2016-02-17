@@ -51,7 +51,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 
                 if let JSON1 = response.result.value
                 {
-                    print(response)
                     for(_,dev) in JSON(JSON1)
                     {
                         self.devices.append(dev)
@@ -161,12 +160,10 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         let actionSheetController: UIAlertController = UIAlertController(title: "Device Options", message: String(cell.deviceName.text!), preferredStyle: .ActionSheet)
         
+        
         let editNameAction: UIAlertAction = UIAlertAction(title: "Edit Name", style: .Default) { action -> Void in
             
-            let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
-            print(c)
-            print(tempCell.textDisplay.text!)
-            //http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
+            self.editAlert(c)
             
         }
         
@@ -177,10 +174,11 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
             
             let tempString = "Are you sure you want to delete \"" + String(tempCell.deviceName.text!) + "\"?"
             
-            let deleteAlert: UIAlertController = UIAlertController(title: "Confirm Deletion", message: tempString, preferredStyle:  .Alert)
+            let deleteAlert: UIAlertController = UIAlertController(title: "Confirm Delete", message: tempString, preferredStyle:  .Alert)
             
             let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
                 Void in
+                
                 
                 let myURL = "http://ignacio.kevinhuynh.net:1337/devices/destroy/" + tempCell.deviceID!
                 
@@ -189,15 +187,10 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                         
                         self.displayMessage("Device has been deleted.")
                         
-                        
                         dispatch_async(dispatch_get_main_queue()) {
                             self.collectionView.reloadData()
+                            self.viewWillAppear(true)
                         }
-                }
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.devices.removeAtIndex(c.row)
-                    self.collectionView.reloadData()
                 }
             }
             
@@ -225,18 +218,55 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
     }
     
-    func editAlert(c : UICollectionViewCell)
+    func editAlert(c : NSIndexPath)
     {
-        let cell = c as! HouseCell
-        print(cell.textDisplay.text!)
+        //  http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
+        //        let cell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
         
-        var nameTextField: UITextField?
+        var nameTextField: UITextField!
         
-        let alertController = UIAlertController(title: "Edit House Name", message: "Please enter new name for your house.", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Edit Device Name", message: "Please enter new name for your device.", preferredStyle: .Alert)
         
         let submit = UIAlertAction(title: "Submit", style: .Default, handler: { (action) -> Void in
-            print("submitting name change")
-            print(cell.textDisplay.text)
+            
+            let newName = nameTextField.text
+            var allow = true
+            
+            if (String(newName).isEmpty)
+            {
+                self.displayMessage("Text Field can not be empty!")
+                allow = false
+                return
+            }
+            
+            for tempDev in self.devices
+            {
+                if(String(tempDev["name"]) == newName)
+                {
+                    allow = false
+                    return
+                }
+            }
+            
+            if(allow)
+            {
+                
+                let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! DeviceCell
+                
+                
+                let myURL = "http://ignacio.kevinhuynh.net:1337/devices/update/" + tempCell.deviceID! + "/?name=" + String(newName!)
+                print(myURL)
+                Alamofire.request(.GET, myURL)
+                    .responseJSON { response in
+                        
+                        self.displayMessage("Name has been updated.")
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.collectionView.reloadData()
+                            self.viewWillAppear(true)
+                        }
+                }
+                
+            }
         })
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
@@ -251,6 +281,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         }
         presentViewController(alertController, animated: true, completion: nil)
     }
+
     
     func displayMessage(message: String)
     {

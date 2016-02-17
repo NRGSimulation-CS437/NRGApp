@@ -190,6 +190,7 @@ class HouseRooms : UITableViewController
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
         if (segue.identifier == "toDevices")
         {
             let indexPath : NSIndexPath = self.tableView.indexPathForSelectedRow!
