@@ -116,13 +116,11 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             return
         }
         
-        
         let myURL = "http://ignacio.kevinhuynh.net:1337/devices/create?"
         
         let owner = String(self.user["id"])
         
         let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
-        
         
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
@@ -134,12 +132,10 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
                     
                     let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
                         { action -> Void in
-                            
                             self.navigationController?.popViewControllerAnimated(true)
                     }
                     
                     actionSheetController.addAction(nextAction)
-                    
                     
                     self.presentViewController(actionSheetController, animated: true, completion: nil)
                 }

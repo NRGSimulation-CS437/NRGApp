@@ -34,7 +34,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         self.collectionView.addGestureRecognizer(lpgr)
 
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
