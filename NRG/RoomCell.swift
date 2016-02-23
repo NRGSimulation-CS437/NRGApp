@@ -14,4 +14,6 @@ class RoomCell : UICollectionViewCell
     @IBOutlet weak var name: UILabel!
     
     @IBOutlet weak var watts: UILabel!
+    
+    var roomID : String!
 }

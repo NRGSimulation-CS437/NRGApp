@@ -353,7 +353,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             let roomView = segue.destinationViewController as! RoomsCollection
             
             roomView.user = self.user
-            roomView.house.append(self.houses[indexPath.row])
+            roomView.house = self.houses[indexPath.row]
             
         }
     }

@@ -10,17 +10,25 @@ import Foundation
 import UIKit
 import Alamofire
 
-class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource
+class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate
 {
     var rooms = [JSON]()
     var user : JSON!
-    var house = [JSON]()
+    var house : JSON!
     
     
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.collectionView.addGestureRecognizer(lpgr)
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -31,7 +39,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         
         self.rooms.removeAll()
         
-        let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house[0]["id"])]
+        let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house["id"])]
         
         Alamofire.request(.GET, "http://ignacio.kevinhuynh.net:1337/rooms/", parameters: parameters)
             .responseJSON { response in
@@ -69,7 +77,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         
         var counter : Double = 0
         
-        let parameters = ["trigger" : "On", "room": String(self.rooms[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house[0]["id"])]
+        let parameters = ["trigger" : "On", "room": String(self.rooms[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house["id"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
@@ -93,6 +101,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                     {
                         cell.name.text = String(self.rooms[indexPath.row]["name"])
                         let tempString = "Power Consumption : " + String(counter) + " Watts"
+                        cell.roomID = String(self.rooms[indexPath.row]["id"])
                         cell.watts.text = tempString
                         cell.userInteractionEnabled = true
                     }
@@ -141,7 +150,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                 let myURL = "http://172.249.231.197:1337/rooms/create?"
                 
                 let owner = String(self.user["id"])
-                let cHouse = String(self.house[0]["id"])
+                let cHouse = String(self.house["id"])
                 
                 let parameters = ["name": String(rName!), "owner": owner, "house": cHouse]
                 
@@ -182,6 +191,173 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
+    func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
+        }
+        
+        let p = gestureReconizer.locationInView(self.collectionView)
+        let indexPath = self.collectionView.indexPathForItemAtPoint(p)
+        
+        if let index = indexPath {
+            //       let cell = self.collectionView.cellForItemAtIndexPath(index)
+            self.editMenu(index)
+        }
+    }
+    
+    func editMenu(c : NSIndexPath)
+    {
+        let cell = self.collectionView.cellForItemAtIndexPath(c) as! RoomCell
+        
+        let actionSheetController: UIAlertController = UIAlertController(title: "Room Options", message: String(cell.name.text!), preferredStyle: .ActionSheet)
+        
+        
+        let editNameAction: UIAlertAction = UIAlertAction(title: "Edit Name", style: .Default) { action -> Void in
+            
+            self.editAlert(c)
+            
+        }
+        
+        
+        let deleteRoomAction: UIAlertAction = UIAlertAction(title: "Delete Room", style: .Default) { action -> Void in
+            
+            let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! RoomCell
+            
+            let tempString = "Are you sure you want to delete \"" + String(tempCell.name.text!) + "\"?"
+            
+            let deleteAlert: UIAlertController = UIAlertController(title: "Confirm Delete", message: tempString, preferredStyle:  .Alert)
+            
+            let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
+                Void in
+                
+                let tempDevicesURL = "http://ignacio.kevinhuynh.net:1337/devices?owner="+String(self.rooms[c.row]["owner"]) + "&room=" + String(self.rooms[c.row]["id"])
+                
+                
+                Alamofire.request(.GET, tempDevicesURL)
+                    .responseJSON { response in
+                        
+                        if let JSON1 = response.result.value
+                        {
+                            for(_,rm) in JSON(JSON1)
+                            {
+                                let tempRoomURL = "http://ignacio.kevinhuynh.net:1337/devices/destroy/"+String(rm["id"])
+                                Alamofire.request(.POST, tempRoomURL)
+                                    .response { request, response, data, error in
+                                        
+                                        dispatch_async(dispatch_get_main_queue()) {
+                                            self.collectionView.reloadData()
+                                        }
+                                }
+                            }
+                        }
+                }
+                
+                
+                let myURL = "http://ignacio.kevinhuynh.net:1337/rooms/destroy/" + tempCell.roomID!
+                
+                Alamofire.request(.POST, myURL)
+                    .response { request, response, data, error in
+                        
+                        self.displayMessage("Room has been deleted.")
+                        
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.collectionView.reloadData()
+                        }
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.rooms.removeAtIndex(c.row)
+                    self.collectionView.reloadData()
+                }
+            }
+            
+            let cancelDelete: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                //do nothing on cancel
+            }
+            
+            deleteAlert.addAction(confirmDelete)
+            deleteAlert.addAction(cancelDelete)
+            self.presentViewController(deleteAlert, animated: true, completion: nil)
+        }
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+            //do nothing on cancel
+        }
+        
+        actionSheetController.addAction(editNameAction)
+        actionSheetController.addAction(deleteRoomAction)
+        actionSheetController.addAction(cancelAction)
+        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.collectionView.reloadData()
+        }
+        
+    }
+    
+    func editAlert(c : NSIndexPath)
+    {
+        //  http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
+        //        let cell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
+        
+        var nameTextField: UITextField!
+        
+        let alertController = UIAlertController(title: "Edit Room Name", message: "Please enter new name for the room.", preferredStyle: .Alert)
+        
+        let submit = UIAlertAction(title: "Submit", style: .Default, handler: { (action) -> Void in
+            
+            let newName = nameTextField.text
+            var allow = true
+            
+            if (String(newName).isEmpty)
+            {
+                self.displayMessage("Text Field can not be empty!")
+                allow = false
+                return
+            }
+            
+            for tempRooms in self.rooms
+            {
+                if(String(tempRooms["name"]) == newName)
+                {
+                    allow = false
+                    return
+                }
+            }
+            
+            if(allow)
+            {
+                
+                let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! RoomCell
+                
+                
+                let myURL = "http://ignacio.kevinhuynh.net:1337/rooms/update/" + tempCell.roomID! + "/?name=" + String(newName!)
+                Alamofire.request(.GET, myURL)
+                    .responseJSON { response in
+                        
+                        self.displayMessage("Name has been updated.")
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.collectionView.reloadData()
+                            self.viewWillAppear(true)
+                        }
+                }
+                
+            }
+        })
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            //do nnothing
+        }
+        alertController.addAction(submit)
+        alertController.addAction(cancel)
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            // Enter the textfiled customization code here.
+            nameTextField = textField
+            nameTextField?.placeholder = "Enter New Name"
+        }
+        presentViewController(alertController, animated: true, completion: nil)
+    }
     
     func displayMessage(message: String)
     {
@@ -203,7 +379,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
             let dest = segue.destinationViewController as! DevicesCollection
             
             dest.user = self.user
-            dest.house = self.house[0]
+            dest.house = self.house
             dest.room = self.rooms[indexPath.row]
         }
     }
