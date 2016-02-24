@@ -4,7 +4,7 @@
 //
 //  Created by kevin on 1/15/16.
 //  Copyright © 2016 Kevin Argumedo. All rights reserved.
-//
+//abdias test
 
 import Foundation
 import UIKit
@@ -24,6 +24,8 @@ class Login: UIViewController {
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
+        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
     }
     
     override func viewWillAppear(animated: Bool) {

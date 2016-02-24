@@ -31,6 +31,10 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             lpgr.delaysTouchesBegan = true
             lpgr.delegate = self
             self.collectionView.addGestureRecognizer(lpgr)
+            
+            self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
+            
+            
         }
     }
     

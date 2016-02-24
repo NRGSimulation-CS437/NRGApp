@@ -29,6 +29,11 @@
 		48E35A1E1C5B1EBC00655FB6 /* AddHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */; };
 		48E8B1F11C5BDFE200EF4297 /* HouseRooms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E8B1F01C5BDFE200EF4297 /* HouseRooms.swift */; };
 		747168F1A1E824353C69CD89 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B48200A71D3F8C74A1DB45F8 /* Pods.framework */; };
+		DB160B191C7D59DB00AD87F7 /* Drawing.png in Resources */ = {isa = PBXBuildFile; fileRef = DB160B181C7D59DB00AD87F7 /* Drawing.png */; };
+		DB160B1B1C7D5E4000AD87F7 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DB160B1A1C7D5E4000AD87F7 /* background.jpg */; };
+		DB160B1D1C7D5FA800AD87F7 /* login_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB160B1C1C7D5FA800AD87F7 /* login_icon.png */; };
+		DB160B1F1C7D5FAE00AD87F7 /* transparent-icon-lock.png in Resources */ = {isa = PBXBuildFile; fileRef = DB160B1E1C7D5FAE00AD87F7 /* transparent-icon-lock.png */; };
+		DB160B211C7E59B400AD87F7 /* seperator.png in Resources */ = {isa = PBXBuildFile; fileRef = DB160B201C7E59B400AD87F7 /* seperator.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +84,11 @@
 		48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHouse.swift; sourceTree = "<group>"; };
 		48E8B1F01C5BDFE200EF4297 /* HouseRooms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRooms.swift; sourceTree = "<group>"; };
 		B48200A71D3F8C74A1DB45F8 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB160B181C7D59DB00AD87F7 /* Drawing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Drawing.png; path = ../../../Downloads/Drawing.png; sourceTree = "<group>"; };
+		DB160B1A1C7D5E4000AD87F7 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = background.jpg; path = ../../../Downloads/background.jpg; sourceTree = "<group>"; };
+		DB160B1C1C7D5FA800AD87F7 /* login_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = login_icon.png; path = ../../../Downloads/login_icon.png; sourceTree = "<group>"; };
+		DB160B1E1C7D5FAE00AD87F7 /* transparent-icon-lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "transparent-icon-lock.png"; path = "../../../Downloads/transparent-icon-lock.png"; sourceTree = "<group>"; };
+		DB160B201C7E59B400AD87F7 /* seperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = seperator.png; path = ../../../Downloads/seperator.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,9 +155,14 @@
 				486408F91C764B2A001CA636 /* RoomsCollection.swift */,
 				4896892B1C5DFC0F0023B354 /* DevicesCollection.swift */,
 				4896892D1C5DFC180023B354 /* DeviceCell.swift */,
+				DB160B1C1C7D5FA800AD87F7 /* login_icon.png */,
 				48E8B1F01C5BDFE200EF4297 /* HouseRooms.swift */,
+				DB160B1E1C7D5FAE00AD87F7 /* transparent-icon-lock.png */,
+				DB160B201C7E59B400AD87F7 /* seperator.png */,
 				486408FB1C765505001CA636 /* RoomCell.swift */,
+				DB160B1A1C7D5E4000AD87F7 /* background.jpg */,
 				0A6809EE1C49AC8600020BB3 /* Assets.xcassets */,
+				DB160B181C7D59DB00AD87F7 /* Drawing.png */,
 				0A6809F01C49AC8600020BB3 /* LaunchScreen.storyboard */,
 				0A6809F31C49AC8600020BB3 /* Info.plist */,
 				0A6809EB1C49AC8600020BB3 /* NRG.xcdatamodeld */,
@@ -301,10 +316,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB160B1D1C7D5FA800AD87F7 /* login_icon.png in Resources */,
 				0A6809F21C49AC8600020BB3 /* LaunchScreen.storyboard in Resources */,
+				DB160B1F1C7D5FAE00AD87F7 /* transparent-icon-lock.png in Resources */,
 				485531091C6543FB00BF5F4B /* Images.xcassets in Resources */,
+				DB160B211C7E59B400AD87F7 /* seperator.png in Resources */,
 				0A6809EF1C49AC8600020BB3 /* Assets.xcassets in Resources */,
+				DB160B1B1C7D5E4000AD87F7 /* background.jpg in Resources */,
 				0A6809EA1C49AC8600020BB3 /* Main.storyboard in Resources */,
+				DB160B191C7D59DB00AD87F7 /* Drawing.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,7 +25,8 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
         }
-        
+        self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
+
         
         let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
         lpgr.minimumPressDuration = 0.5

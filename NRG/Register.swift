@@ -23,6 +23,9 @@ class Register: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
+        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
+
     }
     
     override func didReceiveMemoryWarning() {
