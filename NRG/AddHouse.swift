@@ -14,7 +14,7 @@ import Alamofire
 class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
 {
     
-    var user = [JSON]()
+    var user : JSON!
     var houses = [String]()
     
     var houseImages = ["Apartment", "Beach Cabin", "Beach House", "Cabin in the Woods", "Penthouse", "Winter Cabin"]
@@ -36,12 +36,20 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         picker.dataSource = self
         
         imageView.image = UIImage(named: "Apartment")
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
 
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
     
     @IBAction func addHouse(sender: AnyObject)
@@ -65,22 +73,30 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         
         let myURL = "http://172.249.231.197:1337/house/create?"
-        
-        let currentUser = self.user[0]
-        let owner = String(currentUser["username"])
+    
+        let owner = String(user["id"])
         
         let parameters = ["name": String(name.text!), "owner": owner, "image": self.hImage]
         
         
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
-                print("Response_-------\(response!.statusCode)")
                 
                 if(response!.statusCode != 400)
                 {
-                    self.displayMessage("A new house has been added!")
+                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
                     
-                    self.performSegueWithIdentifier("toCollectionView", sender: self)
+                    
+                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                        { action -> Void in
+                            
+                            self.performSegueWithIdentifier("toCollectionView", sender: self)                            
+                    }
+                    
+                    actionSheetController.addAction(nextAction)
+                    
+                    
+                    self.presentViewController(actionSheetController, animated: true, completion: nil)
                 }
         }
     }
@@ -95,7 +111,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        print(houseImages[row])
         self.imageView.image = UIImage(named: String(houseImages[row]))
         self.hImage = houseImages[row]
     }
@@ -113,11 +128,14 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-                if(segue.identifier == "toCollectionView")
-                {
-                    let dest = segue.destinationViewController as! HouseCollectionView
-                    dest.user = self.user
-                }
+        
+        if(segue.identifier == "toCollectionView")
+        {
+            let navDest = segue.destinationViewController as! UINavigationController
+                    
+            let dest = navDest.viewControllers.first as! HouseCollectionView
+            dest.user = self.user
+        }
     }
 }
 

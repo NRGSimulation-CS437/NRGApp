@@ -21,6 +21,8 @@ class Register: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
     }
     
     override func didReceiveMemoryWarning() {
@@ -57,7 +59,6 @@ class Register: UIViewController {
         //post request will create the user and input username/password into database
         Alamofire.request(.POST, myURL, parameters: parameters)
             .response { request, response, data, error in
-                print("Response_-------\(response!.statusCode)")
                 
                 if(response!.statusCode != 400)
                 {
@@ -83,6 +84,13 @@ class Register: UIViewController {
         
         self.performSegueWithIdentifier("toLogin", sender: self)
     }
+    
+    //rmeoves keyboard on tap on screen
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+
     
     
     //displays alert with a certain message.

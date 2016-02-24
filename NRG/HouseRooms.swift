@@ -13,8 +13,9 @@ import Alamofire
 class HouseRooms : UITableViewController
 {
     var rooms = [JSON]()
-    var user = [JSON]()
+    var user : JSON!
     var house = [JSON]()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,7 @@ class HouseRooms : UITableViewController
         
         self.rooms.removeAll()
 
-        let parameters  = ["owner" : String(self.user[0]["username"]), "house": String(self.house[0]["name"])]
+        let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house[0]["id"])]
         
         Alamofire.request(.GET, "http://ignacio.kevinhuynh.net:1337/rooms/", parameters: parameters)
             .responseJSON { response in
@@ -61,8 +62,43 @@ class HouseRooms : UITableViewController
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+    
+        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
         
-        cell.textLabel?.text = String(self.rooms[indexPath.row]["name"])
+        var counter : Double = 0
+        
+        let parameters = ["trigger" : "On", "room": String(self.rooms[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house[0]["id"])]
+        
+        Alamofire.request(.GET, myURL, parameters: parameters)
+            .responseJSON { response in
+                
+                if let JSON1 = response.result.value
+                {
+                    for(_,dev) in JSON(JSON1)
+                    {
+                        if let tempCount = Double(String(dev["watts"]))
+                        {
+                            counter += tempCount
+                        }
+                    }
+                    
+                    if(String(self.rooms[indexPath.row]["name"]) == "You have not added any rooms!")
+                    {
+                        cell.textLabel?.text = String(self.rooms[indexPath.row]["name"])
+                        cell.textLabel?.textAlignment = .Center
+                        cell.userInteractionEnabled = false
+                    }
+                    else
+                    {
+                        cell.textLabel?.text = "Watts:  " + String(counter) + " " + String(self.rooms[indexPath.row]["name"])
+                        cell.textLabel?.textAlignment = .Left
+                        cell.userInteractionEnabled = true
+
+                    }
+                    
+
+                }
+        }
         
         return cell
     }
@@ -103,24 +139,24 @@ class HouseRooms : UITableViewController
             {
                 if(String(rName!) == String(room["name"]))
                 {
-                    self.displayMessage("You already have a house with that name")
+                    self.displayMessage("You already have a room with that name")
                     return
                 }
             }
             
-            
             let myURL = "http://172.249.231.197:1337/rooms/create?"
             
-            let owner = String(self.user[0]["username"])
-            let cHouse = String(self.house[0]["name"])
+            let owner = String(self.user["id"])
+            let cHouse = String(self.house[0]["id"])
             
             let parameters = ["name": String(rName!), "owner": owner, "house": cHouse]
 
-            Alamofire.request(.POST, myURL, parameters: parameters)
-                .response { request, response, data, error in
-                    print("Response_-------\(response!.statusCode)")
+            Alamofire.request(.POST, myURL, parameters: parameters, encoding: .JSON)
+                .responseJSON { response in
                     
-                    if(response!.statusCode != 400)
+                    print(response)
+                    
+                    if let object = response.result.value
                     {
                         self.displayMessage("A new Room has been added!")
                         
@@ -134,14 +170,14 @@ class HouseRooms : UITableViewController
                                 }
                             }
                             
-                            let newRoom : JSON =  ["name": String(rName!), "owner": owner, "house":cHouse]
-
-                            self.rooms.append(newRoom)
+                            self.rooms.append(JSON(object))
                             
                             self.tableView.reloadData()
                         }
+
                     }
-            }
+                    
+                }
         }
         
         actionSheetController.addAction(nextAction)
@@ -151,6 +187,20 @@ class HouseRooms : UITableViewController
         }
         
         self.presentViewController(actionSheetController, animated: true, completion: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if (segue.identifier == "toDevices")
+        {
+            let indexPath : NSIndexPath = self.tableView.indexPathForSelectedRow!
+
+            let dest = segue.destinationViewController as! DevicesCollection
+            
+            dest.user = self.user
+            dest.house = self.house[0]
+            dest.room = self.rooms[indexPath.row]
+        }
     }
         
 }
