@@ -25,7 +25,7 @@ class Login: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
     }
     
     override func viewWillAppear(animated: Bool) {

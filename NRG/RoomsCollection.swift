@@ -21,7 +21,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background.jpg")!)
+        self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
 
         
         let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="VR9-Jr-U8L">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="VR9-Jr-U8L">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
@@ -120,12 +120,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3D4-xM-avi">
-                                <rect key="frame" x="91" y="296" width="212" height="30"/>
-                                <color key="textColor" red="1" green="0.99908068969999997" blue="0.99320562420000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VyU-nF-pJg">
                                 <rect key="frame" x="20" y="550" width="552" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -161,39 +155,45 @@
                                     </mask>
                                 </variation>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Drawing.png" translatesAutoresizingMaskIntoConstraints="NO" id="ek4-4j-ZTE">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Drawing" translatesAutoresizingMaskIntoConstraints="NO" id="ek4-4j-ZTE">
                                 <rect key="frame" x="156" y="20" width="288" height="219"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="288" id="Kb9-M9-Ypz"/>
                                     <constraint firstAttribute="height" constant="219" id="PQp-X8-rQd"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="vdr-SK-BjF">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_icon" translatesAutoresizingMaskIntoConstraints="NO" id="vdr-SK-BjF">
                                 <rect key="frame" x="70" y="268" width="20" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="xFg-d8-6wh"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="transparent-icon-lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="9bM-H8-dPP">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="transparent-icon-lock" translatesAutoresizingMaskIntoConstraints="NO" id="9bM-H8-dPP">
                                 <rect key="frame" x="71" y="301" width="19" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="19" id="Urs-gD-H6B"/>
                                     <constraint firstAttribute="height" constant="20" id="wKk-iX-PBp"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seperator.png" translatesAutoresizingMaskIntoConstraints="NO" id="c1r-2I-2tc">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seperator" translatesAutoresizingMaskIntoConstraints="NO" id="c1r-2I-2tc">
                                 <rect key="frame" x="70" y="285" width="240" height="9"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="9" id="NIT-QQ-jOh"/>
                                     <constraint firstAttribute="width" constant="240" id="gkK-xU-EIf"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="seperator.png" translatesAutoresizingMaskIntoConstraints="NO" id="W1p-XM-pLQ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="seperator" translatesAutoresizingMaskIntoConstraints="NO" id="W1p-XM-pLQ">
                                 <rect key="frame" x="70" y="320" width="240" height="11"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="11" id="6Rh-za-HEN"/>
                                 </constraints>
                             </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3D4-xM-avi">
+                                <rect key="frame" x="91" y="296" width="212" height="30"/>
+                                <color key="textColor" red="1" green="0.99908068969999997" blue="0.99320562420000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -811,10 +811,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Drawing.png" width="600" height="600"/>
-        <image name="login_icon.png" width="1684" height="1683"/>
-        <image name="seperator.png" width="420" height="420"/>
-        <image name="transparent-icon-lock.png" width="300" height="300"/>
+        <image name="Drawing" width="600" height="600"/>
+        <image name="login_icon" width="1684" height="1683"/>
+        <image name="seperator" width="420" height="420"/>
+        <image name="transparent-icon-lock" width="300" height="300"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="9hd-f4-qAU"/>
