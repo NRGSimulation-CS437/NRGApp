@@ -18,12 +18,16 @@
 		0A680A161C49B99700020BB3 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A151C49B99700020BB3 /* Login.swift */; };
 		0A680A181C49B9AC00020BB3 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A171C49B9AC00020BB3 /* Register.swift */; };
 		0A680A1C1C49C67300020BB3 /* SwiftyJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */; };
+		480A439B1C8632EB003C9F0C /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A439A1C8632EB003C9F0C /* TipsViewController.swift */; };
 		48353D481C6CFE7500484338 /* AddDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48353D471C6CFE7500484338 /* AddDevice.swift */; };
 		485531091C6543FB00BF5F4B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 485531081C6543FB00BF5F4B /* Images.xcassets */; };
 		486408FA1C764B2A001CA636 /* RoomsCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486408F91C764B2A001CA636 /* RoomsCollection.swift */; };
 		486408FC1C765505001CA636 /* RoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486408FB1C765505001CA636 /* RoomCell.swift */; };
 		4896892C1C5DFC0F0023B354 /* DevicesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4896892B1C5DFC0F0023B354 /* DevicesCollection.swift */; };
 		4896892E1C5DFC180023B354 /* DeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4896892D1C5DFC180023B354 /* DeviceCell.swift */; };
+		48B821B11C877F4D0006853D /* HouseSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B821B01C877F4D0006853D /* HouseSettings.swift */; };
+		48B821B31C87BDC50006853D /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B821B21C87BDC50006853D /* SplashScreen.swift */; };
+		48BD54481C80C740004583CF /* TipsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BD54471C80C740004583CF /* TipsPageController.swift */; };
 		48E35A1A1C5B1DA100655FB6 /* HouseCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */; };
 		48E35A1C1C5B1E0F00655FB6 /* HouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A1B1C5B1E0F00655FB6 /* HouseCell.swift */; };
 		48E35A1E1C5B1EBC00655FB6 /* AddHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */; };
@@ -68,12 +72,16 @@
 		0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJson.swift; sourceTree = "<group>"; };
 		1C73F374FCD27C4B3B472927 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		29E3D5AA7CF9FFDE047E53B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		480A439A1C8632EB003C9F0C /* TipsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipsViewController.swift; sourceTree = "<group>"; };
 		48353D471C6CFE7500484338 /* AddDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddDevice.swift; sourceTree = "<group>"; };
 		485531081C6543FB00BF5F4B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		486408F91C764B2A001CA636 /* RoomsCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomsCollection.swift; sourceTree = "<group>"; };
 		486408FB1C765505001CA636 /* RoomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomCell.swift; sourceTree = "<group>"; };
 		4896892B1C5DFC0F0023B354 /* DevicesCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicesCollection.swift; sourceTree = "<group>"; };
 		4896892D1C5DFC180023B354 /* DeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCell.swift; sourceTree = "<group>"; };
+		48B821B01C877F4D0006853D /* HouseSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseSettings.swift; sourceTree = "<group>"; };
+		48B821B21C87BDC50006853D /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
+		48BD54471C80C740004583CF /* TipsPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipsPageController.swift; sourceTree = "<group>"; };
 		48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCollectionView.swift; sourceTree = "<group>"; };
 		48E35A1B1C5B1E0F00655FB6 /* HouseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCell.swift; sourceTree = "<group>"; };
 		48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddHouse.swift; sourceTree = "<group>"; };
@@ -134,6 +142,7 @@
 			children = (
 				0A6809E41C49AC8600020BB3 /* AppDelegate.swift */,
 				48E35A191C5B1DA100655FB6 /* HouseCollectionView.swift */,
+				48B821B01C877F4D0006853D /* HouseSettings.swift */,
 				48E35A1D1C5B1EBC00655FB6 /* AddHouse.swift */,
 				48353D471C6CFE7500484338 /* AddDevice.swift */,
 				0A6809E61C49AC8600020BB3 /* ViewController.swift */,
@@ -142,6 +151,9 @@
 				0A680A1B1C49C67300020BB3 /* SwiftyJson.swift */,
 				0A680A171C49B9AC00020BB3 /* Register.swift */,
 				0A6809E81C49AC8600020BB3 /* Main.storyboard */,
+				48B821B21C87BDC50006853D /* SplashScreen.swift */,
+				48BD54471C80C740004583CF /* TipsPageController.swift */,
+				480A439A1C8632EB003C9F0C /* TipsViewController.swift */,
 				486408F91C764B2A001CA636 /* RoomsCollection.swift */,
 				4896892B1C5DFC0F0023B354 /* DevicesCollection.swift */,
 				4896892D1C5DFC180023B354 /* DeviceCell.swift */,
@@ -378,10 +390,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				486408FA1C764B2A001CA636 /* RoomsCollection.swift in Sources */,
+				48B821B11C877F4D0006853D /* HouseSettings.swift in Sources */,
 				0A6809E71C49AC8600020BB3 /* ViewController.swift in Sources */,
 				48E35A1C1C5B1E0F00655FB6 /* HouseCell.swift in Sources */,
 				0A6809E51C49AC8600020BB3 /* AppDelegate.swift in Sources */,
 				4896892C1C5DFC0F0023B354 /* DevicesCollection.swift in Sources */,
+				480A439B1C8632EB003C9F0C /* TipsViewController.swift in Sources */,
+				48BD54481C80C740004583CF /* TipsPageController.swift in Sources */,
 				48353D481C6CFE7500484338 /* AddDevice.swift in Sources */,
 				0A6809ED1C49AC8600020BB3 /* NRG.xcdatamodeld in Sources */,
 				0A680A161C49B99700020BB3 /* Login.swift in Sources */,
@@ -389,6 +404,7 @@
 				48E8B1F11C5BDFE200EF4297 /* HouseRooms.swift in Sources */,
 				0A680A181C49B9AC00020BB3 /* Register.swift in Sources */,
 				48E35A1E1C5B1EBC00655FB6 /* AddHouse.swift in Sources */,
+				48B821B31C87BDC50006853D /* SplashScreen.swift in Sources */,
 				48E35A1A1C5B1DA100655FB6 /* HouseCollectionView.swift in Sources */,
 				486408FC1C765505001CA636 /* RoomCell.swift in Sources */,
 				4896892E1C5DFC180023B354 /* DeviceCell.swift in Sources */,

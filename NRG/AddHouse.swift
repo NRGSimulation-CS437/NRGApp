@@ -16,11 +16,13 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     var user : JSON!
     var houses = [String]()
+    var link = String()
     
-    var houseImages = ["Apartment", "Beach Cabin", "Beach House", "Cabin in the Woods", "Penthouse", "Winter Cabin"]
+    var houseImages = ["Apartment", "Beach Cabin", "Beach House", "Cabin in the Woods", "Penthouse", "Winter Cabin", "RV"]
     
     var hImage = "Apartment"
     
+    @IBOutlet weak var zipCode: UITextField!
     
     @IBOutlet weak var picker: UIPickerView!
     
@@ -31,7 +33,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
         picker.delegate = self
         picker.dataSource = self
         
@@ -55,6 +57,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     @IBAction func addHouse(sender: AnyObject)
     {
         let hName = String(name.text!)
+        let zip = String(zipCode.text!)
         
         if(hName.isEmpty)
         {
@@ -62,41 +65,77 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             return
         }
         
-        for house in self.houses
+        if(zip.isEmpty)
         {
-            if(hName == house)
-            {
-                self.displayMessage("You already have a house with that name")
-                return
-            }
+            displayMessage("All Fields Required")
+            return
         }
-        
-        
-        let myURL = "http://172.249.231.197:1337/house/create?"
-    
-        let owner = String(user["id"])
-        
-        let parameters = ["name": String(name.text!), "owner": owner, "image": self.hImage]
-        
-        
-        Alamofire.request(.POST, myURL, parameters: parameters)
-            .response { request, response, data, error in
-                
-                if(response!.statusCode != 400)
+        var returnThis = false
+        let weatherAPI = "http://api.wunderground.com/api/99ac21f4c4a0ee76/conditions/q/"+zip+".json"
+        Alamofire.request(.GET, weatherAPI)
+            .responseJSON { response in
+                if let JSON1 = response.result.value
                 {
-                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
+                    let JSON2 = JSON(JSON1)["response"]
                     
-                    
-                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
-                        { action -> Void in
-                            
-                            self.performSegueWithIdentifier("toCollectionView", sender: self)                            
+                    if JSON2["error"] != nil
+                    {
+                        returnThis = false
                     }
+                    else
+                    {
+                        returnThis = true
+                    }
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
                     
-                    actionSheetController.addAction(nextAction)
-                    
-                    
-                    self.presentViewController(actionSheetController, animated: true, completion: nil)
+                    if(returnThis)
+                    {
+                        print("4")
+                        
+                        for house in self.houses
+                        {
+                            if(hName == house)
+                            {
+                                self.displayMessage("You already have a house with that name")
+                                return
+                            }
+                        }
+                        print("5")
+                        
+                        
+                        let myURL = "http://172.249.231.197:1337/house/create?"
+                        
+                        let owner = String(self.user["id"])
+                        
+                        let parameters = ["name": String(self.name.text!), "owner": owner, "image": self.hImage, "zipCode": zip]
+                        print("6")
+                        
+                        
+                        Alamofire.request(.POST, myURL, parameters: parameters)
+                            .response { request, response, data, error in
+                                
+                                if(response!.statusCode != 400)
+                                {
+                                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
+                                    
+                                    
+                                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                                        { action -> Void in
+                                            
+//                                            self.performSegueWithIdentifier("toCollectionView", sender: self)
+                                            self.navigationController?.popViewControllerAnimated(true)
+                                    }
+                                    
+                                    actionSheetController.addAction(nextAction)
+                                    
+                                    
+                                    self.presentViewController(actionSheetController, animated: true, completion: nil)
+                                }
+                        }
+                        
+                    }
                 }
         }
     }
@@ -117,6 +156,10 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return self.houseImages[row]
+    }
+    
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        return NSAttributedString(string: String(self.houseImages[row]), attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
     }
     
     func displayMessage(message: String){

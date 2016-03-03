@@ -19,6 +19,9 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     var houses = [JSON]()
     var houseNames = [String]()
     var house = [JSON]()
+    var link = String()
+    
+    var houseToSettings : JSON!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +36,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             self.collectionView.addGestureRecognizer(lpgr)
             
             self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
+    
             
             
         }
@@ -43,7 +47,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         houses.removeAll()
         houseNames.removeAll()
         
-        let myURL = "http://172.249.231.197:1337/house/"
+        let myURL = self.link+"/house/"
         
         let parameters = ["owner": String(self.user["id"])]
         
@@ -81,7 +85,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         cell.textDisplay.text = String(houses[indexPath.row]["name"])
         cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
         cell.houseID = String(houses[indexPath.row]["id"])
-        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
+        let myURL = self.link+"/devices/"
         
         var counter : Double = 0
         
@@ -160,7 +164,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
                 Void in
                 
-                let tempRoomsURL = "http://ignacio.kevinhuynh.net:1337/rooms?owner="+String(self.houses[c.row]["owner"])+"&house=" + String(self.houses[c.row]["id"])
+                let tempRoomsURL = self.link+"/rooms?owner="+String(self.houses[c.row]["owner"])+"&house=" + String(self.houses[c.row]["id"])
                 
                 Alamofire.request(.GET, tempRoomsURL)
                     .responseJSON { response in
@@ -169,7 +173,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                         {
                             for(_,rm) in JSON(JSON1)
                             {
-                                let tempRoomURL = "http://ignacio.kevinhuynh.net:1337/rooms/destroy/"+String(rm["id"])
+                                let tempRoomURL = self.link+"/rooms/destroy/"+String(rm["id"])
                                 Alamofire.request(.POST, tempRoomURL)
                                     .response { request, response, data, error in
                                         
@@ -188,7 +192,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                         {
                             for(_,rm) in JSON(JSON1)
                             {
-                                let tempRoomURL = "http://ignacio.kevinhuynh.net:1337/rooms/destroy/"+String(rm["id"])
+                                let tempRoomURL = self.link+"/rooms/destroy/"+String(rm["id"])
                                 Alamofire.request(.POST, tempRoomURL)
                                     .response { request, response, data, error in
                                         
@@ -200,7 +204,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                         }
                 }
                 
-                let tempDevicesURL = "http://ignacio.kevinhuynh.net:1337/devices?owner="+String(self.houses[c.row]["owner"]) + "&house=" + String(self.houses[c.row]["id"])
+                let tempDevicesURL = self.link+"/devices?owner="+String(self.houses[c.row]["owner"]) + "&house=" + String(self.houses[c.row]["id"])
                 
                 Alamofire.request(.GET, tempDevicesURL)
                     .responseJSON { response in
@@ -209,7 +213,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                         {
                             for(_,rm) in JSON(JSON1)
                             {
-                                let tempRoomURL = "http://ignacio.kevinhuynh.net:1337/devices/destroy/"+String(rm["id"])
+                                let tempRoomURL = self.link+"/devices/destroy/"+String(rm["id"])
                                 Alamofire.request(.POST, tempRoomURL)
                                     .response { request, response, data, error in
                                         
@@ -222,7 +226,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                 }
                 
                 
-                let myURL = "http://ignacio.kevinhuynh.net:1337/house/destroy/" + tempCell.houseID!
+                let myURL = self.link+"/house/destroy/" + tempCell.houseID!
 
                 Alamofire.request(.POST, myURL)
                     .response { request, response, data, error in
@@ -254,7 +258,15 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
             //do nothing on cancel
         }
-
+        
+        let settingsAction: UIAlertAction = UIAlertAction(title: "Settings", style: .Default) { action -> Void in
+        
+            self.houseToSettings = self.houses[c.row]
+            
+            self.performSegueWithIdentifier("toHouseSettings", sender: self)
+        }
+        
+        actionSheetController.addAction(settingsAction)
         actionSheetController.addAction(editNameAction)
         actionSheetController.addAction(deleteHouseAction)
         actionSheetController.addAction(cancelAction)
@@ -268,8 +280,6 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
     
     func editAlert(c : NSIndexPath)
     {
-      //  http://ignacio.kevinhuynh.net:1337/house/update/26/?name=beach
-//        let cell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
 
         var nameTextField: UITextField!
         
@@ -302,7 +312,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                 let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! HouseCell
                 
                 
-                let myURL = "http://ignacio.kevinhuynh.net:1337/house/update/" + tempCell.houseID! + "/?name=" + String(newName!)
+                let myURL = self.link+"/house/update/" + tempCell.houseID! + "/?name=" + String(newName!)
                 Alamofire.request(.GET, myURL)
                     .responseJSON { response in
 
@@ -346,13 +356,24 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             
             dest.user = self.user
             dest.houses = self.houseNames
+            dest.link = self.link
         }
         
+        if(segue.identifier == "toHouseSettings")
+        {
+
+            let settings = segue.destinationViewController as! HouseSettings
+            
+            settings.user = self.user
+            settings.house = self.houseToSettings
+            settings.houseNames = self.houseNames
+        }
+    
         if(segue.identifier == "toHouse")
         {
-            var dest = self.collectionView!.indexPathsForSelectedItems()!
+            let dest = self.collectionView!.indexPathsForSelectedItems()!
             
-            let indexPath = dest[0] as NSIndexPath
+            let indexPath: NSIndexPath = dest[0] as NSIndexPath
         
             let roomView = segue.destinationViewController as! RoomsCollection
             

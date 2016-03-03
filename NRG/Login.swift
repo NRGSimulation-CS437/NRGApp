@@ -13,6 +13,7 @@ import Alamofire
 class Login: UIViewController {
     
     var user : JSON!
+    var link : String = "http://ignacio.kevinhuynh.net:1337"
     
     //fields for the login view
     @IBOutlet var usName: UITextField!
@@ -25,7 +26,7 @@ class Login: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
+//        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -57,6 +58,9 @@ class Login: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func  preferredStatusBarStyle()-> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
     
     
     //login Button
@@ -73,7 +77,7 @@ class Login: UIViewController {
             return
         }
         
-        let myURL = "http://172.249.231.197:1337/user/"
+        let myURL = self.link + "/user/"
         
         let parameters = ["username": uName, "password": uPassword]
         
@@ -150,6 +154,7 @@ class Login: UIViewController {
             let houseCollect = navDest.viewControllers.first as! HouseCollectionView
             
             houseCollect.user =  self.user
+            houseCollect.link = self.link
         }
     }
 }

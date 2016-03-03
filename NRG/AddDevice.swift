@@ -52,6 +52,8 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     override func viewWillAppear(animated: Bool) {
         
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
+        
         let myURL = "http://ignacio.kevinhuynh.net:1337/deviceList/"
         
         Alamofire.request(.GET, myURL)

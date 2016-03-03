@@ -54,7 +54,7 @@ class Register: UIViewController {
         }
         
         
-        let myURL = "http://172.249.231.197:1337/user/create?"
+        let myURL = "http://ignacio.kevinhuynh.net:1337/user/create?"
         
         let parameters = ["username": rUsername, "password": rUPassword]
         
@@ -93,9 +93,11 @@ class Register: UIViewController {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
+    
+    override func  preferredStatusBarStyle()-> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
 
-    
-    
     //displays alert with a certain message.
     func displayAlertMessage(uMessage: String)
     {
