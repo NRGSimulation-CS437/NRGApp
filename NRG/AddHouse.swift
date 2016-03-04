@@ -105,7 +105,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
                         print("5")
                         
                         
-                        let myURL = "http://172.249.231.197:1337/house/create?"
+                        let myURL = self.link+"/house/create?"
                         
                         let owner = String(self.user["id"])
                         

@@ -9,6 +9,7 @@
 
 import Alamofire
 import Foundation
+import UIKit
 
 
 class Register: UIViewController {
@@ -17,6 +18,8 @@ class Register: UIViewController {
     @IBOutlet var userName: UITextField!
     @IBOutlet var userPassword: UITextField!
     @IBOutlet var repeatUserPassword: UITextField!
+    
+    var link : String = "http://ignacio.kevinhuynh.net:1337"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +57,7 @@ class Register: UIViewController {
         }
         
         
-        let myURL = "http://ignacio.kevinhuynh.net:1337/user/create?"
+        let myURL = link+"/user/create?"
         
         let parameters = ["username": rUsername, "password": rUPassword]
         

@@ -367,6 +367,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             settings.user = self.user
             settings.house = self.houseToSettings
             settings.houseNames = self.houseNames
+            settings.link = self.link
         }
     
         if(segue.identifier == "toHouse")
@@ -379,7 +380,7 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             
             roomView.user = self.user
             roomView.house = self.houses[indexPath.row]
-            
+            roomView.link = self.link
         }
     }
     

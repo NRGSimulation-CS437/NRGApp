@@ -14,7 +14,9 @@ class Login: UIViewController {
     
     var user : JSON!
     var link : String = "http://ignacio.kevinhuynh.net:1337"
-    
+  
+//    var link : String = "http://localhost:1337"
+
     //fields for the login view
     @IBOutlet var usName: UITextField!
     @IBOutlet var usPassword: UITextField!
@@ -146,6 +148,7 @@ class Login: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
         if(segue.identifier == "toLogin")
         {
             
@@ -156,5 +159,6 @@ class Login: UIViewController {
             houseCollect.user =  self.user
             houseCollect.link = self.link
         }
+        
     }
 }

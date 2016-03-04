@@ -10,13 +10,16 @@ import Foundation
 import UIKit
 import Alamofire
 
-class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate {
+class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UISearchBarDelegate {
   
     var devices = [JSON]()
     var user = JSON!()
     var room = JSON!()
     var house = JSON!()
+    var filteredData = [JSON]()
+    var link = String()
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -33,15 +36,17 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
         self.collectionView.addGestureRecognizer(lpgr)
+        filteredData = devices
 
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        self.searchBar.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
-        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/"
+        let myURL = self.link+"/devices/"
         
         self.devices.removeAll()
         
@@ -58,6 +63,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.filteredData = self.devices
                         self.collectionView.reloadData()
                     }
                 }
@@ -65,7 +71,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.devices.count
+        return self.filteredData.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -73,9 +79,13 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DeviceCell
         
         cell.deviceName.text = String(devices[indexPath.row]["name"])
-        cell.imageView.image = UIImage(named: String(devices[indexPath.row]["image"]))
         cell.deviceID = String(devices[indexPath.row]["id"])
         
+        if(!(String(devices[indexPath.row]["image"]) == "Phone Charger"))
+        {
+            cell.imageView.image = UIImage(named: String(devices[indexPath.row]["image"]))
+        }
+
         let tStringWatt = String(devices[indexPath.row]["watts"])
                 
         let dWatts = Double(tStringWatt)
@@ -86,12 +96,19 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         {
             cell.trigger.setOn(false, animated: true)
             cell.on = false
+            if(String(devices[indexPath.row]["image"]) == "Phone Charger")
+            {
+                cell.imageView.image = UIImage(named: "Phone_Charging_Off")
+            }
 //            self.postTrigger(String(self.devices[indexPath.row]["id"]), trigger: String("Off"))
         }
         else
         {
             cell.on = true;
             cell.trigger.setOn(true, animated: true)
+            cell.imageView.animateWithImage(named: "Phone_Charger.gif")
+            cell.imageView.startAnimatingGIF()
+            
 //            self.postTrigger(String(self.devices[indexPath.row]["id"]), trigger: String("On"))
         }
         
@@ -112,16 +129,19 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         {
             cell.on = false
             trigger = "Off"
+            cell.imageView.image = UIImage(named: "Phone_Charging_Off")
         }
         else
         {
             cell.on = true
             trigger = "On"
+            cell.imageView.animateWithImage(named: "Phone_Charger.gif")
+            cell.imageView.startAnimatingGIF()
         }
         
         Alamofire.upload(
             .POST,
-            "http://ignacio.kevinhuynh.net:1337/devices/update/"+String(self.devices[index.row]["id"]),
+            self.link+"/devices/update/"+String(self.devices[index.row]["id"]),
             multipartFormData: {
                 multipartFormData in
                 multipartFormData.appendBodyPart(data: trigger.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "trigger")
@@ -181,7 +201,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 Void in
                 
                 
-                let myURL = "http://ignacio.kevinhuynh.net:1337/devices/destroy/" + tempCell.deviceID!
+                let myURL = self.link+"/devices/destroy/" + tempCell.deviceID!
                 
                 Alamofire.request(.POST, myURL)
                     .response { request, response, data, error in
@@ -252,7 +272,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 let tempCell = self.collectionView.cellForItemAtIndexPath(c) as! DeviceCell
                 
                 
-                let myURL = "http://ignacio.kevinhuynh.net:1337/devices/update/" + tempCell.deviceID! + "/?name=" + String(newName!)
+                let myURL = self.link+"/devices/update/" + tempCell.deviceID! + "/?name=" + String(newName!)
                 print(myURL)
                 Alamofire.request(.GET, myURL)
                     .responseJSON { response in
@@ -280,6 +300,28 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         presentViewController(alertController, animated: true, completion: nil)
     }
 
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        // When there is no text, filteredData is the same as the original data
+        
+        if searchText.isEmpty {
+            filteredData = devices
+        } else {
+            // The user has entered text into the search box
+            // Use the filter method to iterate over all items in the data array
+            // For each item, return true if the item should be included and false if the
+            // item should NOT be included
+            filteredData = devices.filter({(dataItem : JSON ) -> Bool in
+                if String(dataItem["name"]).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
+                    return true
+                } else {
+                    return false
+                }
+            })
+        }
+        
+        print(filteredData)
+        self.collectionView.reloadData()
+    }
     
     func displayMessage(message: String)
     {

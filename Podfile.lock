@@ -1,10 +1,13 @@
 PODS:
   - Alamofire (3.1.4)
+  - Gifu (1.0.1)
 
 DEPENDENCIES:
   - Alamofire (~> 3.0)
+  - Gifu
 
 SPEC CHECKSUMS:
   Alamofire: fbc829692f351fa1d8a31dd75fd7f7f56fea31fb
+  Gifu: bf7a99fe9f20a1dc18c3cb4289aebc922a2ad419
 
 COCOAPODS: 0.39.0

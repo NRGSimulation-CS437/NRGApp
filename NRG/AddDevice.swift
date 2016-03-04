@@ -7,7 +7,7 @@
 //
 import UIKit
 import Alamofire
-
+import Gifu
 
 class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
 {
@@ -16,6 +16,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     var house : JSON!
     var room : JSON!
     var devices = [JSON]()
+    var link  = String()
         
     var deviceObject = [JSON]()
     
@@ -26,9 +27,11 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     @IBOutlet weak var picker: UIPickerView!
     
     @IBOutlet var name: UITextField!
-    @IBOutlet weak var watts: UITextField!
+    @IBOutlet weak var watt: UITextField!
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: AnimatableImageView!
+
+//    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +57,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
         
-        let myURL = "http://ignacio.kevinhuynh.net:1337/deviceList/"
+        let myURL = self.link+"/deviceList/"
         
         Alamofire.request(.GET, myURL)
             .responseJSON { response in
@@ -82,10 +85,14 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         view.endEditing(true)
     }
     
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        return NSAttributedString(string: String(self.deviceObject[row]["image"]), attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
+    }
+    
     @IBAction func addHouse(sender: AnyObject)
     {
         let dName = String(name.text!)
-        var dWatts = String(watts.text!)
+        var dWatts = String(watt.text!)
         
         if(dName.isEmpty)
         {
@@ -118,7 +125,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             return
         }
         
-        let myURL = "http://ignacio.kevinhuynh.net:1337/devices/create?"
+        let myURL = self.link+"/devices/create?"
         
         let owner = String(self.user["id"])
         
@@ -154,9 +161,17 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        self.imageView.image = UIImage(named: String(deviceObject[row]["image"]))
+        if(self.deviceObject[row]["image"] == "Phone Charger")
+        {
+            self.imageView.animateWithImage(named: "Phone_Charger.gif")
+            self.imageView.startAnimatingGIF()
+        }
+        else
+        {
+            self.imageView.image = UIImage(named: String(deviceObject[row]["image"]))
+        }
         self.dImage = String(deviceObject[row]["image"])
-        self.watts.text = String(deviceObject[row]["watts"])
+        self.watt.text = String(deviceObject[row]["watts"])
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

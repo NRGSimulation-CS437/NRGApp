@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Gifu
 
 class DeviceCell: UICollectionViewCell {
     
@@ -19,7 +20,7 @@ class DeviceCell: UICollectionViewCell {
     
     @IBOutlet weak var trigger: UISwitch!
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: AnimatableImageView!
     
     var deviceID : String!
 }

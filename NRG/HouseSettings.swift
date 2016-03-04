@@ -25,6 +25,7 @@ class HouseSettings: UIViewController {
     
     @IBOutlet weak var newName: UITextField!
     
+    var link = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
