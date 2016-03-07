@@ -7,9 +7,8 @@
 //
 import UIKit
 import Alamofire
-import Gifu
 
-class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
+class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     
     var user : JSON!
@@ -17,28 +16,26 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     var room : JSON!
     var devices = [JSON]()
     var link  = String()
-        
-    var deviceObject = [JSON]()
     
-    var dImage = "Laptop"
+    var image : UIImage!
+    var dImage = "/images/GivenDevices/Laptop.png"
+    
+    var deviceObject = [JSON]()
     
     var wattage = "80"
     
-    @IBOutlet weak var picker: UIPickerView!
+    @IBOutlet weak var scrollPicker: UIPickerView!
     
     @IBOutlet var name: UITextField!
     @IBOutlet weak var watt: UITextField!
     
-    @IBOutlet weak var imageView: AnimatableImageView!
-
-//    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
-        picker.delegate = self
-        picker.dataSource = self
+        scrollPicker.delegate = self
+        scrollPicker.dataSource = self
         
         imageView.image = UIImage(named: "Laptop")
         
@@ -49,15 +46,19 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         view.addGestureRecognizer(tap2)
         
         dispatch_async(dispatch_get_main_queue()) {
-            self.picker.reloadAllComponents()
+            self.scrollPicker.reloadAllComponents()
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         
+        self.deviceObject.removeAll()
+        
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
         
         let myURL = self.link+"/deviceList/"
+        
+        print(myURL)
         
         Alamofire.request(.GET, myURL)
             .responseJSON { response in
@@ -68,8 +69,13 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
                     {
                         self.deviceObject.append(jso)
                     }
+                    
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.picker.reloadAllComponents()
+                        
+                        let t : JSON = ["name": "Custom Device", "watts": "0", "image": ""]
+                        
+                        self.deviceObject.append(t)
+                        self.scrollPicker.reloadAllComponents()
                     }
                 }
         }
@@ -86,7 +92,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: String(self.deviceObject[row]["image"]), attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
+        return NSAttributedString(string: String(self.deviceObject[row]["name"]), attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
     }
     
     @IBAction func addHouse(sender: AnyObject)
@@ -105,7 +111,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             displayMessage("Please input amount of watts device uses")
         }
         
-        for device in self.devices
+        for device in self.deviceObject
         {
             if(dName == String(device["name"]))
             {
@@ -125,29 +131,94 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             return
         }
         
-        let myURL = self.link+"/devices/create?"
+        print(self.dImage)
         
-        let owner = String(self.user["id"])
-        
-        let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
-        
-        Alamofire.request(.POST, myURL, parameters: parameters)
-            .response { request, response, data, error in
-                
-                if(response!.statusCode != 400)
-                {
-                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
-                    
-                    
-                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
-                        { action -> Void in
-                            self.navigationController?.popViewControllerAnimated(true)
+        if(self.dImage == "customImage")
+        {
+            Alamofire.upload(
+                .POST,
+                self.link+"/upload/upload",
+                multipartFormData: {
+                    multipartFormData in
+                    multipartFormData.appendBodyPart(data: UIImageJPEGRepresentation(self.image, 0.5)!, name: "avatar", fileName: "house.jpg",mimeType: "image/jpg")
+                },
+                encodingCompletion: {
+                    encodingResult in
+                    switch encodingResult {
+                    case .Success(let upload, _, _ ):
+                        upload.responseJSON { response in
+                            
+                            
+                            if let tempJSON = response.result.value
+                            {
+                                let obj = JSON(tempJSON)["uploadedFiles"]
+                                
+                                let stringURL = String(obj[0]["fd"])
+                                let fullStringArray = stringURL.characters.split{$0 == "/"}.map(String.init)
+                                
+                                self.dImage = "/images/house/"+fullStringArray.last!
+                                print("-----------\n"+self.link+self.dImage+"\n--------------")
+                                
+                                let owner = String(self.user["id"])
+                                
+                                let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
+                                
+                                Alamofire.request(.POST, self.link+"/devices/create?", parameters: parameters)
+                                    .response { request, response, data, error in
+                                                                                
+                                        if(response!.statusCode != 400)
+                                        {
+                                            let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
+                                            
+                                            let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                                                { action -> Void in
+                                                    
+                                                self.navigationController?.popViewControllerAnimated(true)
+                                            }
+                                            
+                                            actionSheetController.addAction(nextAction)
+                                            
+                                            self.presentViewController(actionSheetController, animated: true, completion: nil)
+                                        }
+                                }
+                            }
+                        }
+                    case .Failure(let encodingError):
+                        print("Failure")
+                        print(encodingError)
                     }
-                    
-                    actionSheetController.addAction(nextAction)
-                    
-                    self.presentViewController(actionSheetController, animated: true, completion: nil)
                 }
+            )
+        }
+        else
+        {
+            let myURL = self.link+"/devices/create?"
+            
+            print("fadfgagafdgdsgdsgdsg\n"+myURL+"\ndsfafaas")
+            
+            let owner = String(self.user["id"])
+            
+            let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
+            
+            Alamofire.request(.POST, myURL, parameters: parameters)
+                .response { request, response, data, error in
+                    
+                    if(response!.statusCode != 400)
+                    {
+                        let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
+                        
+                        
+                        let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                            { action -> Void in
+                                self.navigationController?.popViewControllerAnimated(true)
+                        }
+                        
+                        actionSheetController.addAction(nextAction)
+                        
+                        self.presentViewController(actionSheetController, animated: true, completion: nil)
+                    }
+            }
+            
         }
     }
     
@@ -161,21 +232,51 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        if(self.deviceObject[row]["image"] == "Phone Charger")
+        if(self.deviceObject[row]["name"] == "Custom Device")
         {
-            self.imageView.animateWithImage(named: "Phone_Charger.gif")
-            self.imageView.startAnimatingGIF()
+            let myAlert: UIAlertController = UIAlertController(title: "Upload Image", message: "Would you like to select image from Gallery?", preferredStyle:  .Alert)
+            
+            let confirmAction: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
+                Void in
+                
+                self.dImage = "customImage"
+                self.uploadPic()
+                
+            }
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                self.scrollPicker.selectRow(0, inComponent: 0, animated: true)
+            }
+            
+            myAlert.addAction(confirmAction)
+            myAlert.addAction(cancelAction)
+            self.presentViewController(myAlert, animated: true, completion: nil)
         }
         else
         {
-            self.imageView.image = UIImage(named: String(deviceObject[row]["image"]))
+            self.imageView.image = UIImage(named: String(deviceObject[row]["name"]))
+            self.dImage = String(deviceObject[row]["image"])
+            self.watt.text = String(deviceObject[row]["watts"])
         }
-        self.dImage = String(deviceObject[row]["image"])
-        self.watt.text = String(deviceObject[row]["watts"])
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return String(self.deviceObject[row]["image"])
+        return String(self.deviceObject[row]["name"])
+    }
+    
+    func uploadPic()
+    {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .PhotoLibrary
+        presentViewController(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        self.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        imageView.image = self.image
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func displayMessage(message: String){
@@ -193,6 +294,7 @@ class AddDevice: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
             dest.user = self.user
             dest.room = self.room
             dest.house = self.house
+            dest.link = self.link
         }
     }
 }

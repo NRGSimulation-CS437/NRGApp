@@ -25,8 +25,6 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
-
         
         let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
         lpgr.minimumPressDuration = 0.5
@@ -35,8 +33,12 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         self.collectionView.addGestureRecognizer(lpgr)
         
         searchBar.delegate = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         
         self.rooms.removeAll()
+        self.filteredData.removeAll()
         
         let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house["id"])]
         
@@ -63,6 +65,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                     self.collectionView.reloadData()
                 }
         }
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -80,7 +83,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         
         var counter : Double = 0
         
-        let parameters = ["trigger" : "On", "room": String(self.rooms[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house["id"])]
+        let parameters = ["trigger" : "On", "room": String(self.filteredData[indexPath.row]["id"]), "owner": String(self.user["id"]), "house": String(self.house["id"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
             .responseJSON { response in
@@ -98,6 +101,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                     if(String(self.filteredData[indexPath.row]["name"]) == "You have not added any rooms!")
                     {
                         cell.name.text = String(self.filteredData[indexPath.row]["name"])
+                        cell.watts.text = ""
                         cell.userInteractionEnabled = false
                     }
                     else
@@ -168,10 +172,11 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                             
                             dispatch_async(dispatch_get_main_queue()) {
                                 
-                                if(self.rooms.count == 1)
+                                if(self.filteredData.count == 1)
                                 {
-                                    if(self.rooms[0]["name"] == "You have not added any rooms!")
+                                    if(self.filteredData[0]["name"] == "You have not added any rooms!")
                                     {
+                                        self.filteredData.removeAll()
                                         self.rooms.removeAll()
                                     }
                                 }
@@ -235,8 +240,9 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
             let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
                 Void in
                 
-                let tempDevicesURL = self.link+"/devices?owner="+String(self.rooms[c.row]["owner"]) + "&room=" + String(self.rooms[c.row]["id"])
+                let tempDevicesURL = self.link+"/devices?owner="+String(self.filteredData[c.row]["owner"]) + "&room=" + String(self.filteredData[c.row]["id"])
                 
+                print(tempDevicesURL)
                 
                 Alamofire.request(.GET, tempDevicesURL)
                     .responseJSON { response in
@@ -246,11 +252,13 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                             for(_,rm) in JSON(JSON1)
                             {
                                 let tempRoomURL = self.link+"/devices/destroy/"+String(rm["id"])
+                                print(tempRoomURL)
                                 Alamofire.request(.POST, tempRoomURL)
                                     .response { request, response, data, error in
                                         
                                         dispatch_async(dispatch_get_main_queue()) {
                                             self.collectionView.reloadData()
+                                            
                                         }
                                 }
                             }
@@ -268,11 +276,14 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                         
                         dispatch_async(dispatch_get_main_queue()) {
                             self.collectionView.reloadData()
+                            self.viewWillAppear(true)
+
                         }
                 }
                 
                 dispatch_async(dispatch_get_main_queue()) {
                     self.rooms.removeAtIndex(c.row)
+                    self.filteredData.removeAtIndex(c.row)
                     self.collectionView.reloadData()
                 }
             }
@@ -320,7 +331,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                 return
             }
             
-            for tempRooms in self.rooms
+            for tempRooms in self.filteredData
             {
                 if(String(tempRooms["name"]) == newName)
                 {
@@ -362,24 +373,13 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-//        filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
-//            return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-//        })
-//        
-//    }
-//    
-//     This method updates filteredData based on the text in the Search Box
+
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        // When there is no text, filteredData is the same as the original data
         
         if searchText.isEmpty {
             filteredData = rooms
         } else {
-            // The user has entered text into the search box
-            // Use the filter method to iterate over all items in the data array
-            // For each item, return true if the item should be included and false if the
-            // item should NOT be included
+            
             filteredData = rooms.filter({(dataItem : JSON ) -> Bool in
                 if String(dataItem["name"]).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
                     print(dataItem["name"], " has been inserted")

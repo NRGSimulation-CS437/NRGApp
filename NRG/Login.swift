@@ -13,11 +13,10 @@ import Alamofire
 class Login: UIViewController {
     
     var user : JSON!
-    var link : String = "http://ignacio.kevinhuynh.net:1337"
+//    var link : String = "http://ignacio.kevinhuynh.net:1337"
   
-//    var link : String = "http://localhost:1337"
+    var link : String = "http://localhost:1337"
 
-    //fields for the login view
     @IBOutlet var usName: UITextField!
     @IBOutlet var usPassword: UITextField!
     
@@ -28,7 +27,6 @@ class Login: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         
-//        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -63,7 +61,6 @@ class Login: UIViewController {
     override func  preferredStatusBarStyle()-> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
     }
-    
     
     //login Button
     @IBAction func loginAction(sender: AnyObject) {
@@ -127,7 +124,6 @@ class Login: UIViewController {
         self.performSegueWithIdentifier("toRegister", sender: self)
     }
     
-    
     //display customized alert
     func displayAlertMessage(uMessage: String)
     {
@@ -138,7 +134,6 @@ class Login: UIViewController {
         myAlert.addAction(okButton)
         
         self.presentViewController(myAlert, animated: true, completion: nil)
-        
     }
     
     //removes keyboard when tapping elsewhere on screen
@@ -151,7 +146,6 @@ class Login: UIViewController {
         
         if(segue.identifier == "toLogin")
         {
-            
             let navDest = segue.destinationViewController as! UINavigationController
             
             let houseCollect = navDest.viewControllers.first as! HouseCollectionView
@@ -159,6 +153,5 @@ class Login: UIViewController {
             houseCollect.user =  self.user
             houseCollect.link = self.link
         }
-        
     }
 }

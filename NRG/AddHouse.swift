@@ -11,16 +11,19 @@ import UIKit
 import Alamofire
 
 
-class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
+class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     
     var user : JSON!
     var houses = [String]()
     var link = String()
+    var url = String()
     
-    var houseImages = ["Apartment", "Beach Cabin", "Beach House", "Cabin in the Woods", "Penthouse", "Winter Cabin", "RV"]
+    var houseImages = ["Apartment", "Beach House", "Cabin in the Woods", "RV", "Upload Image"]
     
     var hImage = "Apartment"
+    
+    var image : UIImage!
     
     @IBOutlet weak var zipCode: UITextField!
     
@@ -56,20 +59,16 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     @IBAction func addHouse(sender: AnyObject)
     {
+        
         let hName = String(name.text!)
         let zip = String(zipCode.text!)
         
-        if(hName.isEmpty)
+        if(hName.isEmpty || zip.isEmpty)
         {
             displayMessage("All Fields Required")
             return
         }
         
-        if(zip.isEmpty)
-        {
-            displayMessage("All Fields Required")
-            return
-        }
         var returnThis = false
         let weatherAPI = "http://api.wunderground.com/api/99ac21f4c4a0ee76/conditions/q/"+zip+".json"
         Alamofire.request(.GET, weatherAPI)
@@ -92,8 +91,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
                     
                     if(returnThis)
                     {
-                        print("4")
-                        
                         for house in self.houses
                         {
                             if(hName == house)
@@ -102,39 +99,107 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
                                 return
                             }
                         }
-                        print("5")
                         
-                        
-                        let myURL = self.link+"/house/create?"
-                        
-                        let owner = String(self.user["id"])
-                        
-                        let parameters = ["name": String(self.name.text!), "owner": owner, "image": self.hImage, "zipCode": zip]
-                        print("6")
-                        
-                        
-                        Alamofire.request(.POST, myURL, parameters: parameters)
-                            .response { request, response, data, error in
-                                
-                                if(response!.statusCode != 400)
-                                {
-                                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
+                        if(self.houseImages.contains(self.hImage))
+                        {
+                            self.url = "/images/givenhouses/"+self.hImage+".png"
+                            
+                            let myURL = self.link+"/house/create?"
+                            
+                            let owner = String(self.user["id"])
+                            
+                            let parameters = ["name": String(self.name.text!), "owner": owner, "image": self.hImage, "zipCode": zip, "url": self.url]
+                            
+                            
+                            Alamofire.request(.POST, myURL, parameters: parameters)
+                                .response { request, response, data, error in
                                     
-                                    
-                                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
-                                        { action -> Void in
-                                            
-//                                            self.performSegueWithIdentifier("toCollectionView", sender: self)
-                                            self.navigationController?.popViewControllerAnimated(true)
+                                    if(response!.statusCode != 400)
+                                    {
+                                        let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
+                                        
+                                        
+                                        let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                                            { action -> Void in
+                                                
+                                                //                                            self.performSegueWithIdentifier("toCollectionView", sender: self)
+                                                self.navigationController?.popViewControllerAnimated(true)
+                                        }
+                                        
+                                        actionSheetController.addAction(nextAction)
+                                        
+                                        
+                                        self.presentViewController(actionSheetController, animated: true, completion: nil)
                                     }
-                                    
-                                    actionSheetController.addAction(nextAction)
-                                    
-                                    
-                                    self.presentViewController(actionSheetController, animated: true, completion: nil)
-                                }
+                            }
+
+                            
+                            
                         }
-                        
+                        else
+                        {
+                            Alamofire.upload(
+                                .POST,
+                                self.link+"/upload/upload",
+                                multipartFormData: {
+                                    multipartFormData in
+                                    multipartFormData.appendBodyPart(data: UIImageJPEGRepresentation(self.image, 0.5)!, name: "avatar", fileName: "house.jpg",mimeType: "image/jpg")
+                                },
+                                encodingCompletion: {
+                                    encodingResult in
+                                    switch encodingResult {
+                                    case .Success(let upload, _, _ ):
+                                        upload.responseJSON { response in
+                                            print(response)
+                                            
+                                            if let tempJSON = response.result.value
+                                            {
+                                                let obj = JSON(tempJSON)["uploadedFiles"]
+                                                
+                                                let stringURL = String(obj[0]["fd"])
+                                                let fullStringArray = stringURL.characters.split{$0 == "/"}.map(String.init)
+                                                
+                                                self.url = "/images/house/"+fullStringArray.last!
+                                                print(self.link+self.url)
+                                                
+                                                let owner = String(self.user["id"])
+                                                
+                                                let parameters = ["name": String(self.name.text!), "owner": owner, "image": self.hImage, "zipCode": String(self.zipCode.text!), "url": self.url]
+                                                
+                                                
+                                                
+                                                Alamofire.request(.POST, self.link+"/house/create?", parameters: parameters)
+                                                    .response { request, response, data, error in
+                                                        
+                                                        print(response)
+                                                        
+                                                        if(response!.statusCode != 400)
+                                                        {
+                                                            
+                                                            
+                                                            let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
+                                                            
+                                                            
+                                                            let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                                                            { action -> Void in
+                                                                    self.navigationController?.popViewControllerAnimated(true)
+                                                            }
+                                                            
+                                                            actionSheetController.addAction(nextAction)
+                                                            
+                                                            
+                                                            self.presentViewController(actionSheetController, animated: true, completion: nil)
+                                                        }
+                                                }
+                                            }
+                                        }
+                                    case .Failure(let encodingError):
+                                        print("Failure")
+                                        print(encodingError)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
         }
@@ -150,11 +215,52 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        self.imageView.image = UIImage(named: String(houseImages[row]))
-        self.hImage = houseImages[row]
+        if(self.houseImages[row] == "Upload Image")
+        {
+            let myAlert: UIAlertController = UIAlertController(title: "Upload Image", message: "Would you like to select image from Gallery?", preferredStyle:  .Alert)
+            
+            let confirmAction: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
+                Void in
+                
+                self.hImage = "customImage"
+                self.uploadPic()
+                
+            }
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                self.picker.selectRow(0, inComponent: 0, animated: true)
+            }
+            
+            myAlert.addAction(confirmAction)
+            myAlert.addAction(cancelAction)
+            self.presentViewController(myAlert, animated: true, completion: nil)
+        }
+        else
+        {
+            self.hImage = String(houseImages[row])
+            self.image = UIImage(named: String(houseImages[row]))
+            self.imageView.image = self.image
+            self.hImage = houseImages[row]
+        }
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func uploadPic()
+    {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .PhotoLibrary
+        presentViewController(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        self.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        imageView.image = self.image
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+    {
         return self.houseImages[row]
     }
     
@@ -169,7 +275,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         self.presentViewController(myAlert, animated:true, completion: nil);
     }
     
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if(segue.identifier == "toCollectionView")
@@ -181,4 +286,3 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
         }
     }
 }
-

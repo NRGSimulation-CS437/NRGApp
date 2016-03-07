@@ -9,9 +9,10 @@
 import Foundation
 import UIKit
 import Alamofire
+import Kingfisher
 
 class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UISearchBarDelegate {
-  
+    
     var devices = [JSON]()
     var user = JSON!()
     var room = JSON!()
@@ -20,6 +21,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     var link = String()
     
     @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -28,28 +30,28 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
         }
+        
         self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
-
+        
         
         let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
         lpgr.minimumPressDuration = 0.5
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
         self.collectionView.addGestureRecognizer(lpgr)
-        filteredData = devices
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        self.searchBar.delegate = self
+        
+        searchBar.delegate = self
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.filteredData = self.devices
+            self.collectionView.reloadData()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
-        let myURL = self.link+"/devices/"
+        let myURL = link+"/devices/"
         
         self.devices.removeAll()
-        
         let parameters = ["owner": String(self.user["id"]), "room": String(self.room["id"]), "house": String(self.house["id"])]
         
         Alamofire.request(.GET, myURL, parameters: parameters)
@@ -61,13 +63,16 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                     {
                         self.devices.append(dev)
                     }
-                    
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.filteredData = self.devices
-                        self.collectionView.reloadData()
-                    }
+                }
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.filteredData = self.devices
+                    self.collectionView.reloadData()
                 }
         }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -78,43 +83,50 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DeviceCell
         
-        cell.deviceName.text = String(devices[indexPath.row]["name"])
-        cell.deviceID = String(devices[indexPath.row]["id"])
-        
-        if(!(String(devices[indexPath.row]["image"]) == "Phone Charger"))
+        if(String(self.filteredData[indexPath.row]["name"]) == "You have not added any rooms!")
         {
-            cell.imageView.image = UIImage(named: String(devices[indexPath.row]["image"]))
-        }
-
-        let tStringWatt = String(devices[indexPath.row]["watts"])
-                
-        let dWatts = Double(tStringWatt)
-        
-        cell.watts.text = "Watts: " +  String(dWatts!)
-        
-        if(String(devices[indexPath.row]["trigger"]) == "Off")
-        {
-            cell.trigger.setOn(false, animated: true)
-            cell.on = false
-            if(String(devices[indexPath.row]["image"]) == "Phone Charger")
-            {
-                cell.imageView.image = UIImage(named: "Phone_Charging_Off")
-            }
-//            self.postTrigger(String(self.devices[indexPath.row]["id"]), trigger: String("Off"))
+            cell.deviceName.text = String(self.filteredData[indexPath.row]["name"])
+            cell.trigger.hidden = true
+            cell.userInteractionEnabled = false
         }
         else
         {
-            cell.on = true;
-            cell.trigger.setOn(true, animated: true)
-            cell.imageView.animateWithImage(named: "Phone_Charger.gif")
-            cell.imageView.startAnimatingGIF()
+            cell.deviceName.text = String(filteredData[indexPath.row]["name"])
             
-//            self.postTrigger(String(self.devices[indexPath.row]["id"]), trigger: String("On"))
+            var tURL = self.link + String(self.filteredData[indexPath.row]["image"])
+            
+            tURL = tURL.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            
+            let URL = NSURL(string: tURL)!
+            let resource = Resource(downloadURL: URL, cacheKey: String(self.filteredData[indexPath.row]["image"]))
+            
+            cell.imageView.kf_setImageWithResource(resource, placeholderImage: nil,
+                optionsInfo: [.Transition(ImageTransition.Fade(1))])
+
+            cell.deviceID = String(filteredData[indexPath.row]["id"])
+            cell.userInteractionEnabled = true
+            
+            let tStringWatt = String(filteredData[indexPath.row]["watts"])
+            
+            let dWatts = Double(tStringWatt)
+            
+            cell.watts.text = "Watts: " +  String(dWatts!)
+            
+            if(String(filteredData[indexPath.row]["trigger"]) == "Off")
+            {
+                cell.trigger.setOn(false, animated: true)
+                cell.on = false
+            }
+            else
+            {
+                cell.on = true;
+                cell.trigger.setOn(true, animated: true)
+            }
+            
+            cell.trigger?.layer.setValue(indexPath, forKey: "sendIndex")
+            cell.trigger?.layer.setValue(cell, forKey: "sendCell")
+            cell.trigger?.addTarget(self, action: "changeTrigger:", forControlEvents: UIControlEvents.TouchUpInside)
         }
-        
-        cell.trigger?.layer.setValue(indexPath, forKey: "sendIndex")
-        cell.trigger?.layer.setValue(cell, forKey: "sendCell")
-        cell.trigger?.addTarget(self, action: "changeTrigger:", forControlEvents: UIControlEvents.TouchUpInside)
         
         return cell
     }
@@ -129,19 +141,16 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         {
             cell.on = false
             trigger = "Off"
-            cell.imageView.image = UIImage(named: "Phone_Charging_Off")
         }
         else
         {
             cell.on = true
             trigger = "On"
-            cell.imageView.animateWithImage(named: "Phone_Charger.gif")
-            cell.imageView.startAnimatingGIF()
         }
         
         Alamofire.upload(
             .POST,
-            self.link+"/devices/update/"+String(self.devices[index.row]["id"]),
+            link+"/devices/update/"+String(self.filteredData[index.row]["id"]),
             multipartFormData: {
                 multipartFormData in
                 multipartFormData.appendBodyPart(data: trigger.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "trigger")
@@ -169,8 +178,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         let indexPath = self.collectionView.indexPathForItemAtPoint(p)
         
         if let index = indexPath {
-            //       let cell = self.collectionView.cellForItemAtIndexPath(index)
-            print("tou tocuej")
             self.editMenu(index)
         }
     }
@@ -257,7 +264,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 return
             }
             
-            for tempDev in self.devices
+            for tempDev in self.filteredData
             {
                 if(String(tempDev["name"]) == newName)
                 {
@@ -273,7 +280,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 
                 
                 let myURL = self.link+"/devices/update/" + tempCell.deviceID! + "/?name=" + String(newName!)
-                print(myURL)
                 Alamofire.request(.GET, myURL)
                     .responseJSON { response in
                         
@@ -299,7 +305,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         }
         presentViewController(alertController, animated: true, completion: nil)
     }
-
+    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         // When there is no text, filteredData is the same as the original data
         
@@ -317,11 +323,11 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                     return false
                 }
             })
+            self.collectionView.reloadData()
         }
-        
-        print(filteredData)
         self.collectionView.reloadData()
     }
+
     
     func displayMessage(message: String)
     {
@@ -339,6 +345,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
             dest.room = self.room
             dest.house = self.house
             dest.devices = self.devices
+            dest.link = self.link
             
         }
     }

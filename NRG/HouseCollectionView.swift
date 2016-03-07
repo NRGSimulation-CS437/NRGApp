@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 import Alamofire
+import Kingfisher
 
-class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate{
+class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate{
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -37,9 +38,27 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             
             self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
     
+            self.navigationController!.navigationBar.barTintColor = UIColor(red: 0.027, green: 0.133, blue: 0.337, alpha: 1.00)
             
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
             
+            UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+            
+
+
         }
+    }
+    override func  preferredStatusBarStyle()-> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        dispatch_async(dispatch_get_main_queue())
+            {
+                self.collectionView.reloadData()
+        }
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -67,6 +86,10 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
                     }
                 }
         }
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.collectionView.reloadData()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,7 +106,18 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             as! HouseCell
         
         cell.textDisplay.text = String(houses[indexPath.row]["name"])
-        cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
+        
+        var tURL = self.link + String(self.houses[indexPath.row]["url"])
+        
+        tURL = tURL.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
+
+        let URL = NSURL(string: tURL)!
+        let resource = Resource(downloadURL: URL, cacheKey: String(self.houses[indexPath.row]["url"]))
+        
+        cell.imageView.kf_setImageWithResource(resource, placeholderImage: nil,
+            optionsInfo: [.Transition(ImageTransition.Fade(1))])
+        
+//        cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
         cell.houseID = String(houses[indexPath.row]["id"])
         let myURL = self.link+"/devices/"
         
@@ -338,7 +372,6 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         }
         presentViewController(alertController, animated: true, completion: nil)
     }
-
     
     func displayMessage(message: String)
     {
