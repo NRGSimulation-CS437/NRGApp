@@ -100,20 +100,25 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
                         }
                     }
                     
-                    if(String(self.filteredData[indexPath.row]["name"]) == "You have not added any rooms!")
+                    
+                    if (self.filteredData.count >= 1)
                     {
-                        cell.name.text = String(self.filteredData[indexPath.row]["name"])
-                        cell.watts.text = ""
-                        cell.userInteractionEnabled = false
+                        if(String(self.filteredData[indexPath.row]["name"]) == "You have not added any rooms!")
+                        {
+                            cell.name.text = String(self.filteredData[indexPath.row]["name"])
+                            cell.watts.text = ""
+                            cell.userInteractionEnabled = false
+                        }
+                        else
+                        {
+                            cell.name.text = String(self.filteredData[indexPath.row]["name"])
+                            let tempString = "Power Consumption : " + String(counter) + " Watts"
+                            cell.roomID = String(self.filteredData[indexPath.row]["id"])
+                            cell.watts.text = tempString
+                            cell.userInteractionEnabled = true
+                        }
                     }
-                    else
-                    {
-                        cell.name.text = String(self.filteredData[indexPath.row]["name"])
-                        let tempString = "Power Consumption : " + String(counter) + " Watts"
-                        cell.roomID = String(self.filteredData[indexPath.row]["id"])
-                        cell.watts.text = tempString
-                        cell.userInteractionEnabled = true
-                    }
+                    
                 }
         }
         return cell

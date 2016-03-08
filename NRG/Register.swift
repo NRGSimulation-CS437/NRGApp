@@ -19,7 +19,7 @@ class Register: UIViewController {
     @IBOutlet var userPassword: UITextField!
     @IBOutlet var repeatUserPassword: UITextField!
     
-    var link : String = "http://localhost:1337"
+    var link : String = "http://localhost:3000"
 //    var link : String = "http://ignacio.kevinhuynh.net:1337"
     
     override func viewDidLoad() {

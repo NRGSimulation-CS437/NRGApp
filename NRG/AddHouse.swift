@@ -137,10 +137,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                                         
                                         self.presentViewController(actionSheetController, animated: true, completion: nil)
                                     }
-                            }
-
-                            
-                            
+                            }                            
                         }
                         else
                         {
@@ -253,7 +250,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                 if var _ = image {
                     print("PDownload Completed")
                     
-                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
+                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new House has been added!", preferredStyle: .Alert)
                     
                     let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
                         { action -> Void in

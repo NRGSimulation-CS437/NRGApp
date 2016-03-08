@@ -97,18 +97,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Park" translatesAutoresizingMaskIntoConstraints="NO" id="Hqh-BL-qoe">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background3" translatesAutoresizingMaskIntoConstraints="NO" id="Hqh-BL-qoe">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Tip1" translatesAutoresizingMaskIntoConstraints="NO" id="eha-6o-TbV">
-                                <rect key="frame" x="20" y="238" width="335" height="429"/>
-                            </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Holding down on a House, Room, or Device opens up more features." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1ci-mZ-eeV">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Don't have an account? Click register and set up your account in seconds!" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1ci-mZ-eeV">
                                 <rect key="frame" x="56" y="104" width="262" height="126"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Tip1" translatesAutoresizingMaskIntoConstraints="NO" id="eha-6o-TbV">
+                                <rect key="frame" x="20" y="200" width="335" height="429"/>
+                            </imageView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="Hqh-BL-qoe" firstAttribute="leading" secondItem="GaC-n6-Wjo" secondAttribute="leading" id="TwW-NN-gLi"/>
@@ -337,7 +337,7 @@
                                 <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                <state key="normal" title="Skip">
+                                <state key="normal" title="Skip Tips">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -440,6 +440,12 @@
                                     </mask>
                                 </variation>
                             </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Drawing" translatesAutoresizingMaskIntoConstraints="NO" id="ek4-4j-ZTE">
+                                <rect key="frame" x="43" y="74" width="288" height="219"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="219" id="RPd-qL-tCs"/>
+                                </constraints>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginUser" translatesAutoresizingMaskIntoConstraints="NO" id="vdr-SK-BjF">
                                 <rect key="frame" x="70" y="353" width="20" height="21"/>
                             </imageView>
@@ -467,12 +473,12 @@
                                     <constraint firstAttribute="width" constant="19" id="omf-7V-V7p"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Drawing" translatesAutoresizingMaskIntoConstraints="NO" id="ek4-4j-ZTE">
-                                <rect key="frame" x="43" y="74" width="288" height="219"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="219" id="RPd-qL-tCs"/>
-                                </constraints>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QAm-uc-4JO">
+                                <rect key="frame" x="295" y="621" width="22" height="22"/>
+                                <connections>
+                                    <segue destination="z6j-0A-3uH" kind="showDetail" id="iOQ-8O-f1m"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -506,6 +512,7 @@
                             <constraint firstItem="W1p-XM-pLQ" firstAttribute="top" secondItem="c1r-2I-2tc" secondAttribute="bottom" constant="19" id="ftC-pz-WiP"/>
                             <constraint firstItem="WhW-6B-sB5" firstAttribute="top" secondItem="9bM-H8-dPP" secondAttribute="bottom" constant="30" id="h21-bF-kve"/>
                             <constraint firstItem="WhW-6B-sB5" firstAttribute="top" secondItem="3D4-xM-avi" secondAttribute="bottom" constant="25" id="hLV-rN-HyI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="QAm-uc-4JO" secondAttribute="trailing" constant="42" id="iDG-4r-jsX"/>
                             <constraint firstItem="9bM-H8-dPP" firstAttribute="leading" secondItem="W1p-XM-pLQ" secondAttribute="leading" id="iot-xA-D5d"/>
                             <constraint firstItem="zyV-P2-EIo" firstAttribute="leading" secondItem="EoB-Vi-JwJ" secondAttribute="leading" id="kHM-l0-nW6"/>
                             <constraint firstItem="zyV-P2-EIo" firstAttribute="centerX" secondItem="WhW-6B-sB5" secondAttribute="centerX" id="kkT-O9-Zxz"/>
@@ -515,6 +522,7 @@
                             <constraint firstItem="ek4-4j-ZTE" firstAttribute="centerX" secondItem="WhW-6B-sB5" secondAttribute="centerX" id="ngm-GR-t0y"/>
                             <constraint firstItem="vdr-SK-BjF" firstAttribute="leading" secondItem="EoB-Vi-JwJ" secondAttribute="leadingMargin" constant="54" id="oCn-GK-Tnb"/>
                             <constraint firstItem="3D4-xM-avi" firstAttribute="trailing" secondItem="WhW-6B-sB5" secondAttribute="trailing" id="opV-Y5-JQL"/>
+                            <constraint firstItem="QAm-uc-4JO" firstAttribute="centerY" secondItem="VyU-nF-pJg" secondAttribute="centerY" id="sBT-i7-mKg"/>
                             <constraint firstItem="lTL-s8-q26" firstAttribute="centerY" secondItem="vdr-SK-BjF" secondAttribute="centerY" id="y3X-Gp-PtZ"/>
                         </constraints>
                         <variation key="default">
@@ -660,11 +668,11 @@
                         <viewControllerLayoutGuide type="bottom" id="stY-iW-Chx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Odu-bG-8uW">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7xK-iE-gAK">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.02031995914876461" green="0.11262526363134384" blue="0.35878157615661621" alpha="0.75210129310344831" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="IE7-fI-cOz">
@@ -674,12 +682,12 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background" id="TaT-i2-bss">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                    <rect key="frame" x="0.0" y="-64" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="4R9-8O-JuU" customClass="HouseCell" customModule="NRG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
+                                        <rect key="frame" x="0.0" y="64" width="150" height="175"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
@@ -756,7 +764,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="XNk-7j-6Hs">
                             <connections>
-                                <segue destination="C0A-F2-NvB" kind="showDetail" identifier="toHouseAddition" action="showViewController:sender:" id="viO-sF-ryd"/>
+                                <segue destination="C0A-F2-NvB" kind="show" identifier="toHouseAddition" id="viO-sF-ryd"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -911,15 +919,15 @@
                         <viewControllerLayoutGuide type="bottom" id="f2w-H8-d5j"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="epT-SZ-pxX">
-                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="prd-Dg-5Mr">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qT7-de-KvF">
-                                <rect key="frame" x="0.0" y="44" width="600" height="492"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="559"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="F21-SV-2L7">
                                     <size key="itemSize" width="350" height="75"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -927,12 +935,12 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background" id="xL0-6H-ZcP">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="492"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="q5J-3F-62Q" customClass="RoomCell" customModule="NRG" customModuleProvider="target">
-                                        <rect key="frame" x="125" y="0.0" width="350" height="75"/>
+                                        <rect key="frame" x="13" y="0.0" width="350" height="75"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="350" height="75"/>
@@ -1254,9 +1262,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Earth" translatesAutoresizingMaskIntoConstraints="NO" id="I2Z-zt-eVz">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background1" translatesAutoresizingMaskIntoConstraints="NO" id="I2Z-zt-eVz">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Tip2" translatesAutoresizingMaskIntoConstraints="NO" id="WR7-2C-GZc">
+                                <rect key="frame" x="20" y="186" width="335" height="429"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Don't like the house images we provide?      Add your own!" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="w8U-n2-Xfs">
+                                <rect key="frame" x="56" y="70" width="262" height="126"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="I2Z-zt-eVz" firstAttribute="top" secondItem="2h1-tf-PMS" secondAttribute="top" id="GOl-KP-rOH"/>
@@ -1283,9 +1300,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tip3" translatesAutoresizingMaskIntoConstraints="NO" id="4h8-Aj-BAW">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background2" translatesAutoresizingMaskIntoConstraints="NO" id="4h8-Aj-BAW">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Tip3" translatesAutoresizingMaskIntoConstraints="NO" id="VVk-eK-6nJ">
+                                <rect key="frame" x="26" y="205" width="335" height="429"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Press and hold over a house, room, or image for other features." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wib-8h-9oX">
+                                <rect key="frame" x="62" y="71" width="262" height="126"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="4h8-Aj-BAW" secondAttribute="trailing" id="GwL-bc-E7N"/>
@@ -1302,20 +1328,23 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Background1" width="750" height="1334"/>
+        <image name="Background2" width="750" height="1334"/>
+        <image name="Background3" width="750" height="1334"/>
         <image name="Drawing" width="600" height="600"/>
-        <image name="Earth" width="1280" height="800"/>
         <image name="Laptop" width="500" height="500"/>
-        <image name="Park" width="4115" height="2444"/>
-        <image name="Tip1" width="769" height="953"/>
-        <image name="Tip3" width="250" height="290"/>
+        <image name="Tip1" width="780" height="1074"/>
+        <image name="Tip2" width="769" height="918"/>
+        <image name="Tip3" width="769" height="993"/>
         <image name="background" width="750" height="1334"/>
         <image name="loginLock" width="460" height="512"/>
         <image name="loginUser" width="311" height="276"/>
         <image name="seperator" width="420" height="420"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="J7c-xF-bCU"/>
+        <segue reference="9hd-f4-qAU"/>
         <segue reference="KmR-aL-seK"/>
+        <segue reference="iOQ-8O-f1m"/>
         <segue reference="elb-c4-x0S"/>
     </inferredMetricsTieBreakers>
 </document>

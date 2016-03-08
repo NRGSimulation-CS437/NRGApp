@@ -60,8 +60,93 @@ class HouseSettings: UIViewController {
     
     @IBAction func deleteHouse(sender: AnyObject) {
         
+        
+        let tempString = "Are you sure you want to delete \"" + String(self.house["name"]) + "\"?"
+        
+        let deleteAlert: UIAlertController = UIAlertController(title: "Confirm Delete", message: tempString, preferredStyle:  .Alert)
+        
+        let confirmDelete: UIAlertAction = UIAlertAction(title: "Confirm", style: .Default) { action ->
+            Void in
+            
+            let tempRoomsURL = self.link+"/rooms?owner="+String(self.house["owner"])+"&house=" + String(self.house["id"])
+            
+            Alamofire.request(.GET, tempRoomsURL)
+                .responseJSON { response in
+                    
+                    if let JSON1 = response.result.value
+                    {
+                        for(_,rm) in JSON(JSON1)
+                        {
+                            let tempRoomURL = self.link+"/rooms/destroy/"+String(rm["id"])
+                            
+                            Alamofire.request(.POST, tempRoomURL).response
+                                { request , response, data, error in
+                                    
+                            }
+                        }
+                    }
+            }
+
+            
+            let tempDevicesURL = self.link+"/devices?owner="+String(self.house["owner"]) + "&house=" + String(self.house["id"])
+            
+            Alamofire.request(.GET, tempDevicesURL)
+                .responseJSON { response in
+                    
+                    if let JSON1 = response.result.value
+                    {
+                        for(_,rm) in JSON(JSON1)
+                        {
+                            let tempRoomURL = self.link+"/devices/destroy/"+String(rm["id"])
+                            
+                            Alamofire.request(.POST, tempRoomURL).response
+                                { request, response, data, error in
+                                    
+                                    
+                            }
+                        }
+                    }
+            }
+            
+            
+            let myURL = self.link+"/house/destroy/" + String(self.house["id"])
+            
+            Alamofire.request(.POST, myURL)
+                .response { request, response, data, error in
+                    
+            }
+            
+            dispatch_async(dispatch_get_main_queue())
+                {
+                    let myAlert = UIAlertController(title:"Alert", message: "House has been deleted.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(action) -> Void in
+                        self.navigationController?.popViewControllerAnimated(true)
+                    })
+                    
+                    myAlert.addAction(okAction);
+                    self.presentViewController(myAlert, animated:true, completion: nil);
+            }
+
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            //do nnothing
+        }
+
+        deleteAlert.addAction(confirmDelete)
+        deleteAlert.addAction(cancel)
+        presentViewController(deleteAlert, animated: true, completion: nil)
     }
     
+    
+    func displayMessage(message: String)
+    {
+        let myAlert = UIAlertController(title:"Alert", message:message, preferredStyle: UIAlertControllerStyle.Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+        myAlert.addAction(okAction);
+        self.presentViewController(myAlert, animated:true, completion: nil);
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
