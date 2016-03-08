@@ -44,8 +44,6 @@ class HouseSettings: UIViewController {
             .responseJSON { response in
                 if let JSON1 = response.result.value
                 {
-                    print(JSON1)
-                    print("\n")
                     let JSON2 = JSON(JSON1)["current_observation"]
                     
                     self.city.text = String(JSON2["display_location"]["full"])
@@ -56,6 +54,54 @@ class HouseSettings: UIViewController {
 
     @IBAction func updateName(sender: AnyObject) {
         
+        let tempString = String(newName.text!)
+        
+        if (tempString.isEmpty)
+        {
+            self.displayMessage("Text Field can not be empty!")
+            return
+        }
+        
+        for tempNames in self.houseNames
+        {
+            if(tempNames == tempString)
+            {
+                self.displayMessage("You already have a house with that name!")
+                return
+            }
+        }
+        
+        let nameChange = "Are you sure you want to change \"" + String(self.house["name"]) + "\" to \"" + tempString + "\"?"
+        
+        let alertController = UIAlertController(title: "Edit House Name", message: nameChange, preferredStyle: .Alert)
+        
+        let submit = UIAlertAction(title: "Submit", style: .Default, handler: { (action) -> Void in
+            
+            let myURL = self.link+"/house/update/" + String(self.house["id"]) + "/?name=" + tempString
+          
+            Alamofire.request(.GET, myURL)
+                .responseJSON { response in
+                    
+            }
+            
+            dispatch_async(dispatch_get_main_queue())
+                {
+                    let myAlert = UIAlertController(title:"Alert", message: "Name has been changed.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(action) -> Void in
+                        self.navigationController?.popViewControllerAnimated(true)
+                    })
+                    
+                    myAlert.addAction(okAction);
+                    self.presentViewController(myAlert, animated:true, completion: nil);
+            }
+        })
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            //do nnothing
+        }
+        alertController.addAction(submit)
+        alertController.addAction(cancel)
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     @IBAction func deleteHouse(sender: AnyObject) {
@@ -146,7 +192,6 @@ class HouseSettings: UIViewController {
         myAlert.addAction(okAction);
         self.presentViewController(myAlert, animated:true, completion: nil);
     }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -154,8 +199,76 @@ class HouseSettings: UIViewController {
     
     @IBAction func changeZip(sender: AnyObject) {
         
+        var nameTextField: UITextField!
         
+        let alertController = UIAlertController(title: "Edit Zip Code", message: "Please enter new zip code for your home.", preferredStyle: .Alert)
+        
+        let submit = UIAlertAction(title: "Submit", style: .Default, handler: { (action) -> Void in
+            
+            let newName = String(nameTextField.text!)
+            
+            if (newName.isEmpty)
+            {
+                self.displayMessage("Text Field can not be empty!")
+                return
+            }
+            
+            var returnThis = false
+            let weatherAPI = "http://api.wunderground.com/api/99ac21f4c4a0ee76/conditions/q/"+newName+".json"
+            Alamofire.request(.GET, weatherAPI)
+                .responseJSON { response in
+                    if let JSON1 = response.result.value
+                    {
+                        var JSON2 = JSON(JSON1)
+                        
+                        if JSON2["error"] != nil
+                        {
+                            returnThis = false
+                        }
+                        else
+                        {
+                            returnThis = true
+                        }
+                        dispatch_async(dispatch_get_main_queue()) {
+                            
+                            if(returnThis)
+                            {
+                                JSON2 = JSON(JSON1)["current_observation"]
+                                
+                                self.city.text = String(JSON2["display_location"]["full"])
+                                self.temperature.text = String(JSON2["temperature_string"])
+                                let myURL = self.link+"/house/update/" + String(self.house["id"]) + "/?zipCode=" + newName
+                                Alamofire.request(.GET, myURL)
+                                    .responseJSON { response in
+                                        
+                                        self.displayMessage("Name has been updated.")
+                                        dispatch_async(dispatch_get_main_queue()) {
+                                            self.zipCode.text = newName
+                                            self.city.text = String(JSON2["display_location"]["full"])
+                                            self.temperature.text = String(JSON2["temperature_string"])
+                                        }
+                                }
+                                
+                            }
+                        }
+
+                    }
+                    
+            }
+
+        })
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            //do nnothing
+        }
+        alertController.addAction(submit)
+        alertController.addAction(cancel)
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            // Enter the textfiled customization code here.
+            nameTextField = textField
+            nameTextField?.placeholder = "Enter New Zip Code"
+        }
+        presentViewController(alertController, animated: true, completion: nil)
         
     }
-    
 }

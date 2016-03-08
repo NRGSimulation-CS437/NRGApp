@@ -50,7 +50,7 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                 self.collectionView.addGestureRecognizer(lpgr)
                 
                 self.searchBar.delegate = self
-                
+                self.searchBar.barStyle = UIBarStyle.BlackOpaque
         }
     }
     

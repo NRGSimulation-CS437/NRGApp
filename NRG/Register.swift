@@ -29,7 +29,6 @@ class Register: UIViewController {
         view.addGestureRecognizer(tap)
         
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
-
     }
     
     override func didReceiveMemoryWarning() {
