@@ -86,6 +86,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                     if JSON2["error"] != nil
                     {
                         returnThis = false
+                        self.displayMessage("Zip code is invalid")
                     }
                     else
                     {

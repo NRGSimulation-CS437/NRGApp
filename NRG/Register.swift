@@ -19,8 +19,8 @@ class Register: UIViewController {
     @IBOutlet var userPassword: UITextField!
     @IBOutlet var repeatUserPassword: UITextField!
     
-    var link : String = "http://localhost:3000"
-//    var link : String = "http://ignacio.kevinhuynh.net:1337"
+//    var link : String = "http://localhost:3000"
+    var link : String = "http://ignacio.kevinhuynh.net:3000"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,9 +57,11 @@ class Register: UIViewController {
         }
         
         
-        let myURL = link+"/user/create?"
+        let myURL = self.link+"/user/create?"
         
         let parameters = ["username": rUsername, "password": rUPassword]
+        print(myURL)
+        print(parameters)
         
 
         //post request will create the user and input username/password into database
