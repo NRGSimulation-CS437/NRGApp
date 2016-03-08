@@ -13,9 +13,9 @@ import Alamofire
 class Login: UIViewController {
     
     var user : JSON!
-//    var link : String = "http://ignacio.kevinhuynh.net:1337"
+    var link : String = "http://ignacio.kevinhuynh.net:3000"
   
-    var link : String = "http://localhost:1337"
+//    var link : String = "http://localhost:1337"
 
     @IBOutlet var usName: UITextField!
     @IBOutlet var usPassword: UITextField!

@@ -7,21 +7,26 @@
 //
 import UIKit
 import Alamofire
+import Kingfisher
 
-class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate
 {
     
     var user : JSON!
     var house : JSON!
     var room : JSON!
-    var devices = [JSON]()
     var link  = String()
     
     var image : UIImage!
     var dImage = "/images/GivenDevices/Laptop.png"
     
+    @IBOutlet weak var addDeviceButton: UIButton!
+    
     var deviceObject = [JSON]()
     
+    let downloadGroup = dispatch_group_create()
+    
+    @IBOutlet weak var imageUploadProgressView: UIProgressView!
     var wattage = "80"
     
     @IBOutlet weak var scrollPicker: UIPickerView!
@@ -44,6 +49,8 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
                 
         let tap2: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap2)
+        
+        self.imageUploadProgressView.hidden = true
         
         dispatch_async(dispatch_get_main_queue()) {
             self.scrollPicker.reloadAllComponents()
@@ -140,7 +147,7 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
                 self.link+"/upload/upload",
                 multipartFormData: {
                     multipartFormData in
-                    multipartFormData.appendBodyPart(data: UIImageJPEGRepresentation(self.image, 0.5)!, name: "avatar", fileName: "house.jpg",mimeType: "image/jpg")
+                    multipartFormData.appendBodyPart(data: UIImageJPEGRepresentation(self.image, 0.1)!, name: "avatar", fileName: "house.jpg",mimeType: "image/jpg")
                 },
                 encodingCompletion: {
                     encodingResult in
@@ -148,7 +155,7 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
                     case .Success(let upload, _, _ ):
                         upload.responseJSON { response in
                             
-                            
+                            print(response)
                             if let tempJSON = response.result.value
                             {
                                 let obj = JSON(tempJSON)["uploadedFiles"]
@@ -157,30 +164,32 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
                                 let fullStringArray = stringURL.characters.split{$0 == "/"}.map(String.init)
                                 
                                 self.dImage = "/images/house/"+fullStringArray.last!
+                                print(self.dImage)
+                                
                                 print("-----------\n"+self.link+self.dImage+"\n--------------")
                                 
                                 let owner = String(self.user["id"])
                                 
                                 let parameters = ["name": dName, "owner": owner, "image": self.dImage, "room": String(self.room["id"]), "house": String(self.house["id"]), "watts": dWatts, "trigger": "Off"]
                                 
-                                Alamofire.request(.POST, self.link+"/devices/create?", parameters: parameters)
-                                    .response { request, response, data, error in
-                                                                                
-                                        if(response!.statusCode != 400)
-                                        {
-                                            let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
-                                            
-                                            let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
-                                                { action -> Void in
+                                dispatch_async(dispatch_get_main_queue())
+                                    {
+                                        Alamofire.request(.POST, self.link+"/devices/create?", parameters: parameters)
+                                            .response { request, response, data, error in
+                                                
+                                                if(response!.statusCode != 400)
+                                                {
                                                     
-                                                self.navigationController?.popViewControllerAnimated(true)
-                                            }
-                                            
-                                            actionSheetController.addAction(nextAction)
-                                            
-                                            self.presentViewController(actionSheetController, animated: true, completion: nil)
+                                                    dispatch_async(dispatch_get_main_queue())
+                                                        {
+                                                            self.dLoadImage(self.link+self.dImage)
+                                                    }
+
+                                                }
                                         }
+
                                 }
+
                             }
                         }
                     case .Failure(let encodingError):
@@ -222,6 +231,52 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
         }
     }
     
+    func dLoadImage(timage : String)
+    {
+        
+        
+        dispatch_group_enter(downloadGroup) //Begin a download. Make a "group enter"
+        
+        self.imageView.kf_setImageWithURL(NSURL(string: timage)!, placeholderImage: nil, optionsInfo: nil,
+            progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                //Leave the group after downloaded (or error)
+                dispatch_group_leave(self.downloadGroup)
+                
+                if var _ = image {
+                    print("PDownload Completed")
+                    
+                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
+                    
+                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                        { action -> Void in
+                            
+                            self.navigationController?.popViewControllerAnimated(true)
+                    }
+                    
+                    actionSheetController.addAction(nextAction)
+
+                    dispatch_async(dispatch_get_main_queue())
+                        {
+                            self.imageUploadProgressView.progress = 1
+                            self.imageUploadProgressView.tintColor = UIColor.greenColor()
+                            self.presentViewController(actionSheetController, animated: true, completion: nil)
+                            
+                    }
+                    
+                    //println(self.images)
+                } else {
+                    self.dLoadImage(timage)
+                    self.imageUploadProgressView.hidden = false
+                    if(0.93 >= self.imageUploadProgressView.progress)
+                    {
+                        self.imageUploadProgressView.progress += 0.01
+                    }
+                }
+        })
+    
+    }
+
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -272,6 +327,45 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
         presentViewController(picker, animated: true, completion: nil)
     }
     
+    func uploadImage()
+    {
+        let imageData = UIImageJPEGRepresentation(self.image, 1)
+        
+        if(imageData == nil)
+        {
+            return
+        }
+        
+        self.addDeviceButton.enabled = false
+        
+        let uploadScriptUrl = NSURL(string: "http://www.swiftdeveloperblog.com/http-post-example-script/")
+        
+        let request = NSMutableURLRequest(URL: uploadScriptUrl!)
+        request.HTTPMethod = "POST"
+        request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
+        
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        
+        let session = NSURLSession(configuration: configuration, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        
+        let task = session.uploadTaskWithRequest(request, fromData: imageData!)
+        task.resume()
+        
+    }
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+        self.displayMessage("Error Uploading Image. Please try again.")
+        
+        self.addDeviceButton.enabled = true
+    }
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        let uploadProgress:Float = Float(totalBytesSent)/Float(totalBytesExpectedToSend)
+        
+        self.imageUploadProgressView.progress = uploadProgress
+    }
+    
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
         self.image = info[UIImagePickerControllerOriginalImage] as? UIImage
@@ -279,6 +373,8 @@ class AddDevice: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    
+
     func displayMessage(message: String){
         let myAlert = UIAlertController(title:"Alert", message:message, preferredStyle: UIAlertControllerStyle.Alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)

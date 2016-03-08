@@ -44,9 +44,6 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
             self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
             
             UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
-            
-
-
         }
     }
     override func  preferredStatusBarStyle()-> UIStatusBarStyle {
@@ -117,8 +114,8 @@ class HouseCollectionView: UIViewController, UICollectionViewDelegate, UICollect
         cell.imageView.kf_setImageWithResource(resource, placeholderImage: nil,
             optionsInfo: [.Transition(ImageTransition.Fade(1))])
         
-//        cell.imageView.image = UIImage(named: String(houses[indexPath.row]["image"]))
         cell.houseID = String(houses[indexPath.row]["id"])
+        
         let myURL = self.link+"/devices/"
         
         var counter : Double = 0

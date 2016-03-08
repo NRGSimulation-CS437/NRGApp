@@ -23,6 +23,10 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
     
     var hImage = "Apartment"
     
+    let downloadGroup = dispatch_group_create()
+    
+    @IBOutlet weak var imageUploadProgressView: UIProgressView!
+    
     var image : UIImage!
     
     @IBOutlet weak var zipCode: UITextField!
@@ -41,6 +45,8 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
         picker.dataSource = self
         
         imageView.image = UIImage(named: "Apartment")
+        
+        self.imageUploadProgressView.hidden = true
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
@@ -102,7 +108,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                         
                         if(self.houseImages.contains(self.hImage))
                         {
-                            self.url = "/images/givenhouses/"+self.hImage+".png"
+                            self.url = "/images/GivenHouses/"+self.hImage+".png"
                             
                             let myURL = self.link+"/house/create?"
                             
@@ -110,6 +116,7 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                             
                             let parameters = ["name": String(self.name.text!), "owner": owner, "image": self.hImage, "zipCode": zip, "url": self.url]
                             
+                            print(self.link+self.url)
                             
                             Alamofire.request(.POST, myURL, parameters: parameters)
                                 .response { request, response, data, error in
@@ -122,7 +129,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                                         let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
                                             { action -> Void in
                                                 
-                                                //                                            self.performSegueWithIdentifier("toCollectionView", sender: self)
                                                 self.navigationController?.popViewControllerAnimated(true)
                                         }
                                         
@@ -150,7 +156,6 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                                     switch encodingResult {
                                     case .Success(let upload, _, _ ):
                                         upload.responseJSON { response in
-                                            print(response)
                                             
                                             if let tempJSON = response.result.value
                                             {
@@ -169,26 +174,15 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
                                                 
                                                 
                                                 Alamofire.request(.POST, self.link+"/house/create?", parameters: parameters)
-                                                    .response { request, response, data, error in
-                                                        
-                                                        print(response)
+                                                    .response
+                                                    { request, response, data, error in
                                                         
                                                         if(response!.statusCode != 400)
                                                         {
-                                                            
-                                                            
-                                                            let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new house has been added", preferredStyle: .Alert)
-                                                            
-                                                            
-                                                            let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
-                                                            { action -> Void in
-                                                                    self.navigationController?.popViewControllerAnimated(true)
+                                                                dispatch_async(dispatch_get_main_queue())
+                                                                    {
+                                                                        self.dLoadImage(self.link+self.url)
                                                             }
-                                                            
-                                                            actionSheetController.addAction(nextAction)
-                                                            
-                                                            
-                                                            self.presentViewController(actionSheetController, animated: true, completion: nil)
                                                         }
                                                 }
                                             }
@@ -243,6 +237,53 @@ class AddHouse: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, 
             self.hImage = houseImages[row]
         }
     }
+    
+    func dLoadImage(timage : String)
+    {
+        
+        
+        dispatch_group_enter(downloadGroup) //Begin a download. Make a "group enter"
+        
+        self.imageView.kf_setImageWithURL(NSURL(string: timage)!, placeholderImage: nil, optionsInfo: nil,
+            progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                //Leave the group after downloaded (or error)
+                dispatch_group_leave(self.downloadGroup)
+                
+                if var _ = image {
+                    print("PDownload Completed")
+                    
+                    let actionSheetController: UIAlertController = UIAlertController(title: "Alert", message: "A new Device has been added!", preferredStyle: .Alert)
+                    
+                    let nextAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default)
+                        { action -> Void in
+                            
+                            self.navigationController?.popViewControllerAnimated(true)
+                    }
+                    
+                    actionSheetController.addAction(nextAction)
+                    
+                    dispatch_async(dispatch_get_main_queue())
+                        {
+                            self.imageUploadProgressView.progress = 1
+                            self.imageUploadProgressView.tintColor = UIColor.greenColor()
+                            self.presentViewController(actionSheetController, animated: true, completion: nil)
+                            
+                    }
+                    
+                    //println(self.images)
+                } else {
+                    self.dLoadImage(timage)
+                    self.imageUploadProgressView.hidden = false
+                    if(0.93 >= self.imageUploadProgressView.progress)
+                    {
+                        self.imageUploadProgressView.progress += 0.01
+                    }
+                }
+        })
+        
+    }
+
     
     func uploadPic()
     {

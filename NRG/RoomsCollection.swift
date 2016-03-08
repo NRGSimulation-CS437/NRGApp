@@ -33,12 +33,14 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
         self.collectionView.addGestureRecognizer(lpgr)
         
         searchBar.delegate = self
+        searchBar.barStyle = UIBarStyle.BlackOpaque
     }
     
     override func viewWillAppear(animated: Bool) {
         
         self.rooms.removeAll()
         self.filteredData.removeAll()
+        self.searchBar.text?.removeAll()
         
         let parameters  = ["owner" : String(self.user["id"]), "house": String(self.house["id"])]
         
@@ -414,7 +416,7 @@ class RoomsCollection : UIViewController, UICollectionViewDelegate, UICollection
             
             dest.user = self.user
             dest.house = self.house
-            dest.room = self.rooms[indexPath.row]
+            dest.room = self.filteredData[indexPath.row]
             dest.link = self.link
         }
     }

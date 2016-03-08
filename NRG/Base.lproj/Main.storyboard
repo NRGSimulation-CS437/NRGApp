@@ -592,12 +592,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                             </textField>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ijV-rK-XSJ">
-                                <rect key="frame" x="0.0" y="411" width="375" height="113"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="113" id="Y9D-gx-skS"/>
-                                </constraints>
-                            </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OLv-eC-QgR">
                                 <rect key="frame" x="54" y="553" width="259" height="30"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -608,6 +602,15 @@
                                     <action selector="addHouse:" destination="C0A-F2-NvB" eventType="touchUpInside" id="0oi-Gv-4pW"/>
                                 </connections>
                             </button>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ijV-rK-XSJ">
+                                <rect key="frame" x="0.0" y="411" width="375" height="113"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="113" id="Y9D-gx-skS"/>
+                                </constraints>
+                            </pickerView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KTm-AK-J5Z">
+                                <rect key="frame" x="54" y="617" width="259" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -617,8 +620,11 @@
                             <constraint firstItem="l0Z-w4-tHr" firstAttribute="leading" secondItem="IdH-E5-AzP" secondAttribute="leadingMargin" id="8fV-ZY-1M8"/>
                             <constraint firstItem="ijV-rK-XSJ" firstAttribute="leading" secondItem="IdH-E5-AzP" secondAttribute="leading" id="AMx-gy-Kb4"/>
                             <constraint firstItem="l0Z-w4-tHr" firstAttribute="leading" secondItem="jMY-uU-bUV" secondAttribute="leading" id="G3C-Bd-cGs"/>
+                            <constraint firstItem="KTm-AK-J5Z" firstAttribute="top" secondItem="OLv-eC-QgR" secondAttribute="bottom" constant="34" id="Jyc-kA-JU4"/>
+                            <constraint firstItem="KTm-AK-J5Z" firstAttribute="leading" secondItem="OLv-eC-QgR" secondAttribute="leading" id="KeJ-Qs-HbH"/>
                             <constraint firstItem="OLv-eC-QgR" firstAttribute="centerX" secondItem="l0Z-w4-tHr" secondAttribute="centerX" id="LPB-hg-xK3"/>
                             <constraint firstItem="eKC-t9-cDK" firstAttribute="leading" secondItem="l0Z-w4-tHr" secondAttribute="leading" id="Oap-jy-uy9"/>
+                            <constraint firstItem="KTm-AK-J5Z" firstAttribute="trailing" secondItem="OLv-eC-QgR" secondAttribute="trailing" id="Uvq-EJ-mdK"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jMY-uU-bUV" secondAttribute="trailing" constant="8" id="b0H-Rd-Fqo"/>
                             <constraint firstItem="jMY-uU-bUV" firstAttribute="top" secondItem="5f0-MQ-eE9" secondAttribute="bottom" constant="21" id="cPD-xO-a0h"/>
                             <constraint firstItem="ijV-rK-XSJ" firstAttribute="top" secondItem="eKC-t9-cDK" secondAttribute="bottom" constant="8" symbolic="YES" id="cwn-kF-r6x"/>
@@ -633,6 +639,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="imageUploadProgressView" destination="KTm-AK-J5Z" id="z7l-XE-bPm"/>
                         <outlet property="imageView" destination="eKC-t9-cDK" id="44c-7M-1VS"/>
                         <outlet property="name" destination="jMY-uU-bUV" id="tZD-4c-rCT"/>
                         <outlet property="picker" destination="ijV-rK-XSJ" id="Xp0-ni-pM9"/>
@@ -1122,6 +1129,7 @@
         <!--Add a Device-->
         <scene sceneID="EAq-mR-nrE">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Xg-eU-Zny" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="4Eu-Ef-slZ" customClass="AddDevice" customModule="NRG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uXG-FN-BfS"/>
@@ -1148,6 +1156,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Pth-eC-dSb">
+                                <rect key="frame" x="58" y="625" width="299" height="2"/>
+                            </progressView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Device Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="StU-dp-3ct">
                                 <rect key="frame" x="103" y="72" width="208" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1180,6 +1191,7 @@
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Hyd-m2-bIp" firstAttribute="top" relation="lessThanOrEqual" secondItem="kAe-ti-qUk" secondAttribute="bottom" constant="82" id="3Rc-kr-7Aa"/>
+                            <constraint firstItem="Pth-eC-dSb" firstAttribute="top" secondItem="yQe-zw-hQ6" secondAttribute="bottom" constant="43" id="5X6-PG-3MJ"/>
                             <constraint firstItem="Mpu-Ck-r88" firstAttribute="leading" secondItem="LBa-Cn-mtf" secondAttribute="leading" constant="145" id="7t6-GO-t6c"/>
                             <constraint firstItem="Hyd-m2-bIp" firstAttribute="centerX" secondItem="eKU-nk-Ab1" secondAttribute="centerX" id="BRS-EL-19Q"/>
                             <constraint firstItem="yQe-zw-hQ6" firstAttribute="leading" secondItem="eKU-nk-Ab1" secondAttribute="leading" id="CB0-9h-4LH"/>
@@ -1188,9 +1200,11 @@
                             <constraint firstItem="eKU-nk-Ab1" firstAttribute="trailing" secondItem="StU-dp-3ct" secondAttribute="trailing" id="DXI-j9-aev"/>
                             <constraint firstItem="yQe-zw-hQ6" firstAttribute="trailing" secondItem="eKU-nk-Ab1" secondAttribute="trailing" id="GJV-au-Lfo"/>
                             <constraint firstItem="yQe-zw-hQ6" firstAttribute="top" secondItem="eKU-nk-Ab1" secondAttribute="bottom" constant="68" id="ROr-xM-zvz"/>
+                            <constraint firstItem="Pth-eC-dSb" firstAttribute="trailing" secondItem="Hyd-m2-bIp" secondAttribute="trailing" id="Wwa-hC-YSI"/>
                             <constraint firstItem="Mpu-Ck-r88" firstAttribute="centerY" secondItem="kAe-ti-qUk" secondAttribute="centerY" id="boc-QP-4lA"/>
                             <constraint firstItem="kAe-ti-qUk" firstAttribute="top" secondItem="StU-dp-3ct" secondAttribute="bottom" constant="8" symbolic="YES" id="dog-FE-xG9"/>
                             <constraint firstItem="StU-dp-3ct" firstAttribute="centerX" secondItem="LBa-Cn-mtf" secondAttribute="centerX" id="dw2-ND-1Xb"/>
+                            <constraint firstItem="Pth-eC-dSb" firstAttribute="leading" secondItem="Hyd-m2-bIp" secondAttribute="leading" id="fZh-ia-ebK"/>
                             <constraint firstItem="StU-dp-3ct" firstAttribute="top" secondItem="uXG-FN-BfS" secondAttribute="bottom" constant="8" symbolic="YES" id="ffp-ge-Yvj"/>
                             <constraint firstItem="onj-2H-XMY" firstAttribute="top" secondItem="yQe-zw-hQ6" secondAttribute="bottom" constant="154" id="g0f-EI-Tdz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kAe-ti-qUk" secondAttribute="trailing" constant="217" id="hiz-JU-dch"/>
@@ -1208,6 +1222,8 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
+                        <outlet property="addDeviceButton" destination="yQe-zw-hQ6" id="Lf1-Lt-ASy"/>
+                        <outlet property="imageUploadProgressView" destination="Pth-eC-dSb" id="nsA-Xy-ztd"/>
                         <outlet property="imageView" destination="Hyd-m2-bIp" id="wdy-4a-eM9"/>
                         <outlet property="name" destination="StU-dp-3ct" id="9gn-X8-lV5"/>
                         <outlet property="scrollPicker" destination="eKU-nk-Ab1" id="djw-m0-vGQ"/>
@@ -1215,7 +1231,6 @@
                         <segue destination="Odp-ix-yGD" kind="showDetail" action="showViewController:sender:" id="elb-c4-x0S"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9Xg-eU-Zny" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2655" y="-50"/>
         </scene>
@@ -1301,6 +1316,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="J7c-xF-bCU"/>
         <segue reference="KmR-aL-seK"/>
-        <segue reference="Mu4-0X-5ae"/>
+        <segue reference="elb-c4-x0S"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -20,31 +20,37 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
     var filteredData = [JSON]()
     var link = String()
     
+    var loadImages : UIImage!
+    
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    let downloadGroup = dispatch_group_create()
+    
+    override func viewDidAppear(animated: Bool) {
+        dispatch_async(dispatch_get_main_queue())
+        {
+                self.collectionView.reloadData()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.collectionView.reloadData()
-        }
-        
-        self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
-        
-        
-        let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        lpgr.minimumPressDuration = 0.5
-        lpgr.delaysTouchesBegan = true
-        lpgr.delegate = self
-        self.collectionView.addGestureRecognizer(lpgr)
-        
-        searchBar.delegate = self
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            self.filteredData = self.devices
-            self.collectionView.reloadData()
+        dispatch_async(dispatch_get_main_queue())
+            {
+                self.collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
+                
+                
+                let lpgr = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+                lpgr.minimumPressDuration = 0.5
+                lpgr.delaysTouchesBegan = true
+                lpgr.delegate = self
+                self.collectionView.addGestureRecognizer(lpgr)
+                
+                self.searchBar.delegate = self
+                
         }
     }
     
@@ -83,53 +89,64 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DeviceCell
         
-        if(String(self.filteredData[indexPath.row]["name"]) == "You have not added any rooms!")
+        cell.deviceName.text = String(filteredData[indexPath.row]["name"])
+        
+        var tURL = self.link + String(filteredData[indexPath.row]["image"])
+        
+        tURL = tURL.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        
+        let URL = NSURL(string: tURL)!
+        let resource = Resource(downloadURL: URL, cacheKey: String(filteredData[indexPath.row]["image"]))
+        
+        dispatch_group_enter(self.downloadGroup) //Begin a download. Make a "group enter"
+        
+        KingfisherManager.sharedManager.retrieveImageWithResource(resource, optionsInfo: [.Transition(ImageTransition.Fade(1))],
+            progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                //Leave the group after downloaded (or error)
+                dispatch_group_leave(self.downloadGroup)
+                
+                if let _ = image {
+                    print("Photo Download Completed")
+                    //println(self.images)
+                } else {
+                    print("Error Downloading images")
+                }
+        })
+        
+        cell.imageView.kf_setImageWithResource(resource, placeholderImage: nil,
+            optionsInfo: [.Transition(ImageTransition.Fade(1))])
+        
+
+        print("retrieving\n\n")
+        
+        cell.deviceID = String(filteredData[indexPath.row]["id"])
+        cell.userInteractionEnabled = true
+        
+        let tStringWatt = String(filteredData[indexPath.row]["watts"])
+        
+        let dWatts = Double(tStringWatt)
+        
+        cell.watts.text = "Watts: " +  String(dWatts!)
+        
+        if(String(filteredData[indexPath.row]["trigger"]) == "Off")
         {
-            cell.deviceName.text = String(self.filteredData[indexPath.row]["name"])
-            cell.trigger.hidden = true
-            cell.userInteractionEnabled = false
+            cell.trigger.setOn(false, animated: true)
+            cell.on = false
         }
         else
         {
-            cell.deviceName.text = String(filteredData[indexPath.row]["name"])
-            
-            var tURL = self.link + String(self.filteredData[indexPath.row]["image"])
-            
-            tURL = tURL.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
-            
-            let URL = NSURL(string: tURL)!
-            let resource = Resource(downloadURL: URL, cacheKey: String(self.filteredData[indexPath.row]["image"]))
-            
-            cell.imageView.kf_setImageWithResource(resource, placeholderImage: nil,
-                optionsInfo: [.Transition(ImageTransition.Fade(1))])
-
-            cell.deviceID = String(filteredData[indexPath.row]["id"])
-            cell.userInteractionEnabled = true
-            
-            let tStringWatt = String(filteredData[indexPath.row]["watts"])
-            
-            let dWatts = Double(tStringWatt)
-            
-            cell.watts.text = "Watts: " +  String(dWatts!)
-            
-            if(String(filteredData[indexPath.row]["trigger"]) == "Off")
-            {
-                cell.trigger.setOn(false, animated: true)
-                cell.on = false
-            }
-            else
-            {
-                cell.on = true;
-                cell.trigger.setOn(true, animated: true)
-            }
-            
-            cell.trigger?.layer.setValue(indexPath, forKey: "sendIndex")
-            cell.trigger?.layer.setValue(cell, forKey: "sendCell")
-            cell.trigger?.addTarget(self, action: "changeTrigger:", forControlEvents: UIControlEvents.TouchUpInside)
+            cell.on = true;
+            cell.trigger.setOn(true, animated: true)
         }
+        
+        cell.trigger?.layer.setValue(indexPath, forKey: "sendIndex")
+        cell.trigger?.layer.setValue(cell, forKey: "sendCell")
+        cell.trigger?.addTarget(self, action: "changeTrigger:", forControlEvents: UIControlEvents.TouchUpInside)
         
         return cell
     }
+    
     
     func changeTrigger(sender: UISwitch)
     {
@@ -168,6 +185,28 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
             }
         )
     }
+//    
+//    func dLoadImage(indexPath : NSIndexPath)
+//    {
+//        dispatch_group_enter(downloadGroup) //Begin a download. Make a "group enter"
+//        
+//        self.imageView.kf_setImageWithURL(NSURL(string: timage)!, placeholderImage: nil, optionsInfo: nil,
+//            progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+//                
+//                //Leave the group after downloaded (or error)
+//                dispatch_group_leave(self.downloadGroup)
+//                
+//                if var _ = image {
+//                    print("PDownload Completed")
+//                    //println(self.images)
+//                } else {
+//                    print("Error Downloading images")
+//                    self.dLoadImage(timage)
+//                }
+//        })
+//        
+//    }
+
     
     func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
@@ -216,7 +255,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                         self.displayMessage("Device has been deleted.")
                         
                         dispatch_async(dispatch_get_main_queue()) {
-                            self.collectionView.reloadData()
                             self.viewWillAppear(true)
                         }
                 }
@@ -239,10 +277,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
         actionSheetController.addAction(deleteDeviceAction)
         actionSheetController.addAction(cancelAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            self.collectionView.reloadData()
-        }
         
     }
     
@@ -285,7 +319,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                         
                         self.displayMessage("Name has been updated.")
                         dispatch_async(dispatch_get_main_queue()) {
-                            self.collectionView.reloadData()
                             self.viewWillAppear(true)
                         }
                 }
@@ -323,7 +356,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
                     return false
                 }
             })
-            self.collectionView.reloadData()
         }
         self.collectionView.reloadData()
     }
@@ -344,7 +376,6 @@ class DevicesCollection : UIViewController, UICollectionViewDelegate, UICollecti
             dest.user = self.user
             dest.room = self.room
             dest.house = self.house
-            dest.devices = self.devices
             dest.link = self.link
             
         }
